@@ -1,7 +1,7 @@
-
 var drawing;
 var con;
 var playerSprite;
+var stompClient = null;
 CANV_HEIGHT = 200;
 CANV_WIDTH = 200;
 SPR_HEIGHT = 40;
@@ -12,15 +12,32 @@ var y = 80;
 var dx = 0;
 var dy = 0;
 
+
 var currentKey;
 
-function init(){ // called on startup (not using onLoad)
+function init(){ // called on startup
+    console.log("run v3");
     drawing = document.getElementById("drawing");
     con = drawing.getContext("2d");
     playerSprite = document.getElementById("PlayerSprite");
     document.onkeydown = updateKeys;
-    //calls the method draw every 100ms
-    setInterval(draw, 10);
+    connect();
+    //calls the method draw continuously
+    setInterval(draw, 300);
+}
+function connect() {
+    var socket = new SockJS('/gs-guide-websocket');
+    stompClient = Stomp.over(socket);
+    stompClient.connect({}, function (frame) {
+        console.log('Connected: ' + frame);
+
+        // I am not confident that the function call is calling a js function or java function.
+
+
+        stompClient.subscribe('/topic/moveto', function(map) {
+            showXY(JSON.parse(map.body).content);
+        });
+    });
 }
 
 //updates currentKey with the latest key pressed.
@@ -33,6 +50,7 @@ function updateKeys(e){
         case "ArrowLeft":
             dx = -MOVE_VALUE;
             currentKey = null;
+            sendDX();
             break;
 
         case "d":
@@ -40,6 +58,7 @@ function updateKeys(e){
         case "ArrowRight":
             dx = MOVE_VALUE;
             currentKey = null;
+            sendDX();
             break;
 
         case "w":
@@ -54,6 +73,7 @@ function updateKeys(e){
         case "ArrowDown":
             dy = MOVE_VALUE;
             currentKey = null;
+            sendDX();
             break;
     }
 
@@ -70,6 +90,8 @@ function draw(){
 
     //check for boundaries
     boundaries();
+
+
     //draw the image
     con.drawImage(playerSprite, x, y, SPR_WIDTH, SPR_HEIGHT);
     //draw a rectangle
@@ -100,3 +122,12 @@ function boundaries(){
         y = 0;
     }
 }//end of wrap
+
+function sendDX() {
+    console.log("sending x value: " + x + " to server");
+    stompClient.send("/app/hello", {}, JSON.stringify({'x': $("#x").val()}));
+}
+
+function showXY(coordinates) {
+     document.getElementById('serverX').innerHTML = "Server Coordinates: " + coordinates;
+}
