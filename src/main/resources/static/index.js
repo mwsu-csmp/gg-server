@@ -11,12 +11,13 @@ var x = 80;
 var y = 80;
 var dx = 0;
 var dy = 0;
+var mapHolder;
 
 
 var currentKey;
 
 function init(){ // called on startup
-    console.log("run v3");
+    console.log("run v4");
     drawing = document.getElementById("drawing");
     con = drawing.getContext("2d");
     playerSprite = document.getElementById("PlayerSprite");
@@ -31,12 +32,13 @@ function connect() {
     stompClient.connect({}, function (frame) {
         console.log('Connected: ' + frame);
 
-        // I am not confident that the function call is calling a js function or java function.
-
-
         stompClient.subscribe('/topic/moveto', function(map) {
-            showXY(JSON.parse(map.body).content);
+            showXY(JSON.parse(mapHolder.body).content);
         });
+
+
+
+        // I am not confident that the function call is calling a js function or java function.
     });
 }
 
@@ -125,7 +127,7 @@ function boundaries(){
 
 function sendDX() {
     console.log("sending x value: " + x + " to server");
-    stompClient.send("/app/hello", {}, JSON.stringify({'x': $("#x").val()}));
+    stompClient.send("/index/hello", {}, JSON.stringify({'x': $("#x").val()}));
 }
 
 function showXY(coordinates) {

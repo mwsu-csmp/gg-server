@@ -8,10 +8,11 @@ import org.springframework.web.util.HtmlUtils;
 @Controller
 public class PlayerController {
 
-    @MessageMapping("/hello")
-    @SendTo("/topic/playerPos")
-    public Player player(Mapping playerpos) throws Exception{
-        Thread.sleep(1000);
-        return new Player("~~Coordinates~~: " + HtmlUtils.htmlEscape(playerpos.getCoordinates()));
+
+    @MessageMapping(value = "/hello")
+    @SendTo("/topic/moveto")
+    public String map(Player player) throws Exception{
+        return player.getX();
     }
+
 }

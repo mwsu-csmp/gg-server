@@ -1,16 +1,16 @@
 package hello;
 
 public class Mapping {
-    private String coordinates;
+    private String content;
 
-    public Mapping(){
+    public Mapping(){}
+
+
+    public Mapping(String content){
+        this.content=content;
     }
 
-    public Mapping(String coordinates){
-        this.coordinates=coordinates;
-    }
-
-    public String getCoordinates(){
-        return coordinates;
+    public String getContent(){
+        return content;
     }
 }
