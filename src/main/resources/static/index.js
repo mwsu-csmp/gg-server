@@ -31,13 +31,11 @@ function connect() {
     stompClient.connect({}, function (frame) {
         console.log('Connected: ' + frame);
 
+        // Calls the method map from PlayerController.java and displays the return
+        // statement under canvas
         stompClient.subscribe('/topic/moveto', function(map) {
             showXY(JSON.parse(map.body).content);
         });
-
-
-
-        // I am not confident that the function call is calling a js function or java function.
     });
 }
 
@@ -125,8 +123,6 @@ function boundaries(){
 }//end of wrap
 
 function sendDX() {
-    console.log("sending x value: " + x + " to server");
-    console.log("sending x value: " +JSON.stringify({'x': $("#x").val()}) + " to server" );
     stompClient.send("/index/hello", {}, JSON.stringify(x));
 }
 
