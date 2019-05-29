@@ -1,7 +1,7 @@
 var drawing;
 var con;
 var playerSprite;
-var stompClient = null
+var stompClient = null;
 CANV_HEIGHT = 200;
 CANV_WIDTH = 200;
 SPR_HEIGHT = 40;
@@ -20,21 +20,21 @@ function init(){ // called on startup
     drawing = document.getElementById("drawing");
     con = drawing.getContext("2d");
     playerSprite = document.getElementById("PlayerSprite");
-    document.onkeydown = updateKeys;
+    document.onkeydown = updateKeys;//gets key presses
     connect();
-    //calls the method draw continuously
+    //calls the method draw continuously every 300 ms
     setInterval(draw, 300);
 }
 function connect() {
-    var socket = new SockJS('/gs-guide-websocket');
+    var socket = new SockJS('/gs-guide-websocket');//connection link
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {
         console.log('Connected: ' + frame);
 
-        // Calls the method map from PlayerController.java and displays the return
-        // statement under canvas
-        stompClient.subscribe('/topic/moveto', function(map) {
-            showXY(JSON.parse(map.body).content);
+        // Calls the method playerpos from PlayerController.java and
+        // displays the return statement under canvas
+        stompClient.subscribe('/topic/moveto', function(playerpos) {
+            showXY(JSON.parse(playerpos.body).content);
         });
     });
 }
@@ -65,6 +65,7 @@ function updateKeys(e){
         case "ArrowUp":
             dy = -MOVE_VALUE;
             currentKey = null;
+            sendDX();
             break;
 
         case "s":
@@ -122,10 +123,21 @@ function boundaries(){
     }
 }//end of wrap
 
+//sends coordinates (currently only x) to server
 function sendDX() {
-    stompClient.send("/index/hello", {}, JSON.stringify(x));
+    stompClient.send("/index/PlayerInfo", {}, JSON.stringify(x));
 }
 
+
+// **** The following methods display 'debugging'    ****
+// **** information that's retrieved from the server ****
+
+//x (soon to be y) coordinates
 function showXY(coordinates) {
      document.getElementById('serverX').innerHTML = "Server Coordinates: " + coordinates;
+}
+
+//last key pressed (not working yet)
+function showKeyPressed(keyPressed){
+    document.getElementById('keyPressed').innerHTML = "Last Key Pressed: " + keyPressed;
 }

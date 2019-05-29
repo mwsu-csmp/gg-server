@@ -1,12 +1,12 @@
-package hello;
+package Init;
 
-public class Mapping {
+public class Message {
     private String content;
 
-    public Mapping(){}
+    public Message(){}
 
 
-    public Mapping(String content){
+    public Message(String content){
         this.content=content;
     }
 

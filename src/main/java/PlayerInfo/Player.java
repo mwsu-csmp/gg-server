@@ -1,4 +1,4 @@
-package hello;
+package PlayerInfo;
 
 public class Player  {
     private int x;
@@ -22,7 +22,4 @@ public class Player  {
         return x;
     }
 
-    public void setX(){
-        x += 40;
-    }
 }
