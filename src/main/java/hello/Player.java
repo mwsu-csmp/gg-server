@@ -1,24 +1,28 @@
 package hello;
 
 public class Player  {
-    private String x;
+    private int x;
 
     public Player(){
-        setX();
+
     }
 
-    public Player(String x){
+    public Player(int x){
         this.x = x;
-        setX();
+
+        //TODO: ENABLE setX();
     }
 
-    public String getX(){
+    public int updateX(int x){
+        this.x = x;
+        return this.x;
+    }
+
+    public int getX(){
         return x;
     }
 
     public void setX(){
-        int temp = Integer.parseInt(x);
-        temp += 40;
-        x = Integer.toString(temp);
+        x += 40;
     }
 }

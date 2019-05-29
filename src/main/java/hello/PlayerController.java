@@ -11,8 +11,8 @@ public class PlayerController {
 
     @MessageMapping(value = "/hello")
     @SendTo("/topic/moveto")
-    public String map(Player player) throws Exception{
-        return player.getX();
+    public Mapping map(Player player) throws Exception{
+        return new Mapping(HtmlUtils.htmlEscape(Integer.toString(player.getX())));
     }
 
 }

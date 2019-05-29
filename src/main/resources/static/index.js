@@ -1,7 +1,7 @@
 var drawing;
 var con;
 var playerSprite;
-var stompClient = null;
+var stompClient = null
 CANV_HEIGHT = 200;
 CANV_WIDTH = 200;
 SPR_HEIGHT = 40;
@@ -11,7 +11,6 @@ var x = 80;
 var y = 80;
 var dx = 0;
 var dy = 0;
-var mapHolder;
 
 
 var currentKey;
@@ -33,7 +32,7 @@ function connect() {
         console.log('Connected: ' + frame);
 
         stompClient.subscribe('/topic/moveto', function(map) {
-            showXY(JSON.parse(mapHolder.body).content);
+            showXY(JSON.parse(map.body).content);
         });
 
 
@@ -127,7 +126,8 @@ function boundaries(){
 
 function sendDX() {
     console.log("sending x value: " + x + " to server");
-    stompClient.send("/index/hello", {}, JSON.stringify({'x': $("#x").val()}));
+    console.log("sending x value: " +JSON.stringify({'x': $("#x").val()}) + " to server" );
+    stompClient.send("/index/hello", {}, JSON.stringify(x));
 }
 
 function showXY(coordinates) {
