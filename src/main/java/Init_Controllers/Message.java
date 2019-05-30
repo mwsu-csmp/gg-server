@@ -1,4 +1,4 @@
-package Init;
+package Init_Controllers;
 
 public class Message {
     private String content;

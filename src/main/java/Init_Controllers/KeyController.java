@@ -1,6 +1,6 @@
-package KeyboardInput;
+package Init_Controllers;
 
-import Init.Message;
+import KeyboardInput.Keyboard;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;

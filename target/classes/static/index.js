@@ -26,7 +26,7 @@ function init(){ // called on startup
     setInterval(draw, 300);
 }
 function connect() {
-    var socket = new SockJS('/gs-guide-websocket');//connection link
+    var socket = new SockJS('/WebSocketConfig');//connection link
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {
         console.log('Connected: ' + frame);
@@ -35,6 +35,9 @@ function connect() {
         // displays the return statement under canvas
         stompClient.subscribe('/topic/moveto', function(playerpos) {
             showXY(JSON.parse(playerpos.body).content);
+        });
+        stompClient.subscribe('/topic/keyboard', function(readKey) {
+            showKeyPressed(JSON.parse(readKey.body).content);
         });
     });
 }
@@ -50,6 +53,7 @@ function updateKeys(e){
             dx = -MOVE_VALUE;
             currentKey = null;
             sendDX();
+            sendKeyPressed();
             break;
 
         case "d":
@@ -58,6 +62,7 @@ function updateKeys(e){
             dx = MOVE_VALUE;
             currentKey = null;
             sendDX();
+            sendKeyPressed();
             break;
 
         case "w":
@@ -66,6 +71,7 @@ function updateKeys(e){
             dy = -MOVE_VALUE;
             currentKey = null;
             sendDX();
+            sendKeyPressed();
             break;
 
         case "s":
@@ -74,6 +80,7 @@ function updateKeys(e){
             dy = MOVE_VALUE;
             currentKey = null;
             sendDX();
+            sendKeyPressed();
             break;
     }
 
@@ -128,9 +135,14 @@ function sendDX() {
     stompClient.send("/index/PlayerInfo", {}, JSON.stringify(x));
 }
 
+//sends last key pressed to server
+function sendKeyPressed(){
+    console.log("" + currentKey);
+  //  stompClient.send("/index/KeyboardInput", {}, JSON.stringify(key.toString()));
+}
 
-// **** The following methods display 'debugging'    ****
-// **** information that's retrieved from the server ****
+// ***** The following methods display 'debugging'    *****
+// ***** information that's retrieved from the server *****
 
 //x (soon to be y) coordinates
 function showXY(coordinates) {
