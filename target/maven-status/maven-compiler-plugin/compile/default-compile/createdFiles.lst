@@ -1,5 +1,7 @@
-hello\PlayerController.class
-hello\Player.class
-hello\WebSocketConfig.class
-hello\Application.class
-hello\Mapping.class
+Init\Message.class
+Init\PlayerController.class
+KeyboardInput\KeyController.class
+Init\WebSocketConfig.class
+Init\Player.class
+Init\Application.class
+KeyboardInput\Keyboard.class

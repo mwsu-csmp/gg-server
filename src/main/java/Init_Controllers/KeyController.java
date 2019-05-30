@@ -13,9 +13,10 @@ public class KeyController {
 
     Logger log = LoggerFactory.getLogger(this.getClass());
 
-   @MessageMapping(value = "/KeyboardInput")
+    @MessageMapping(value = "/KeyboardInput")
     @SendTo("/topic/keyboard")
     public Message readKey(Keyboard key) throws Exception{
+
         log.info("getting the keyboard input");
         return new Message(HtmlUtils.htmlEscape(key.getKey()));
     }

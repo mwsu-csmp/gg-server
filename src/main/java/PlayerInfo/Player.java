@@ -2,6 +2,7 @@ package PlayerInfo;
 
 public class Player  {
     private int x;
+    private int y;
 
     public Player(){
 
@@ -9,7 +10,7 @@ public class Player  {
 
     public Player(int x){
         this.x = x;
-
+        this.y = y;
         //TODO: ENABLE setX();
     }
 
@@ -21,5 +22,7 @@ public class Player  {
     public int getX(){
         return x;
     }
-
+    public int getY(){
+        return y;
+    }
 }
