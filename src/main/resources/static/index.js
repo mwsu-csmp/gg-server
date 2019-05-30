@@ -42,7 +42,8 @@ function connect() {
     });
 }
 
-//updates currentKey with the latest key pressed.
+// updates currentKey with the latest key pressed.
+// SENDKEYPRESSED WILL BE UPDATED TO NOT BE HARD CODED
 function updateKeys(e){
     currentKey = e.key;
     switch (currentKey){
@@ -53,7 +54,7 @@ function updateKeys(e){
             dx = -MOVE_VALUE;
             currentKey = null;
             sendDX();
-            sendKeyPressed();
+            sendKeyPressed("a");
             break;
 
         case "d":
@@ -62,7 +63,7 @@ function updateKeys(e){
             dx = MOVE_VALUE;
             currentKey = null;
             sendDX();
-            sendKeyPressed();
+            sendKeyPressed("d");
             break;
 
         case "w":
@@ -71,7 +72,7 @@ function updateKeys(e){
             dy = -MOVE_VALUE;
             currentKey = null;
             sendDX();
-            sendKeyPressed();
+            sendKeyPressed("w");
             break;
 
         case "s":
@@ -80,7 +81,7 @@ function updateKeys(e){
             dy = MOVE_VALUE;
             currentKey = null;
             sendDX();
-            sendKeyPressed();
+            sendKeyPressed("s");
             break;
     }
 
@@ -136,9 +137,8 @@ function sendDX() {
 }
 
 //sends last key pressed to server
-function sendKeyPressed(){
-    console.log("" + currentKey);
-  //  stompClient.send("/index/KeyboardInput", {}, JSON.stringify(key.toString()));
+function sendKeyPressed(e){
+    stompClient.send("/index/KeyboardInput", {}, JSON.stringify(e));
 }
 
 // ***** The following methods display 'debugging'    *****

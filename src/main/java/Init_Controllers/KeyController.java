@@ -1,6 +1,7 @@
 package Init_Controllers;
 
 import KeyboardInput.Keyboard;
+import PlayerInfo.Player;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
@@ -18,6 +19,7 @@ public class KeyController {
     public Message readKey(Keyboard key) throws Exception{
 
         log.info("getting the keyboard input");
+
         return new Message(HtmlUtils.htmlEscape(key.getKey()));
     }
 }
