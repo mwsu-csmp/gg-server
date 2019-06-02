@@ -1,4 +1,4 @@
-package Init_Controllers;
+package com.gg.controllers;
 
 public class Message {
     private String content;

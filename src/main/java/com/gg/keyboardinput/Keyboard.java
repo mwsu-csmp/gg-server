@@ -2,7 +2,7 @@
  * This class is for storing keyboard input.
 */
 
-package KeyboardInput;
+package com.gg.keyboardinput;
 
 
 public class Keyboard {

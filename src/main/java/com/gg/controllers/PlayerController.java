@@ -1,7 +1,6 @@
-package Init_Controllers;
+package com.gg.controllers;
 
-import KeyboardInput.Keyboard;
-import PlayerInfo.Player;
+import com.gg.player.Player;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
@@ -10,16 +9,16 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 
 @Controller
-public class KeyController {
+public class PlayerController {
 
     Logger log = LoggerFactory.getLogger(this.getClass());
 
-    @MessageMapping(value = "/KeyboardInput")
-    @SendTo("/topic/keyboard")
-    public Message readKey(Keyboard key) throws Exception{
+    @MessageMapping(value = "/com/gg/player")
+    @SendTo("/topic/moveto")
+    public Message playerpos(Player player) throws Exception{
 
-        log.info("getting the keyboard input");
-
-        return new Message(HtmlUtils.htmlEscape(key.getKey()));
+        log.info("getting the player position");
+        return new Message(HtmlUtils.htmlEscape(Integer.toString(player.getX())));
     }
+
 }

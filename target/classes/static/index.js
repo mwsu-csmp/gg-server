@@ -13,10 +13,10 @@ var dx = 0;
 var dy = 0;
 
 
-var currentKey;
+
 
 function init(){ // called on startup
-    console.log("run v4");
+    console.log("v1");
     drawing = document.getElementById("drawing");
     con = drawing.getContext("2d");
     playerSprite = document.getElementById("PlayerSprite");
@@ -45,43 +45,44 @@ function connect() {
 // updates currentKey with the latest key pressed.
 // SENDKEYPRESSED WILL BE UPDATED TO NOT BE HARD CODED
 function updateKeys(e){
-    currentKey = e.key;
+    let currentKey = e.key;
+    console.log(currentKey);
     switch (currentKey){
 
         case "a":
         case "A":
         case "ArrowLeft":
             dx = -MOVE_VALUE;
-            currentKey = null;
+            sendKeyPressed(currentKey);
             sendDX();
-            sendKeyPressed("a");
+            currentKey = null;
             break;
 
         case "d":
         case "D":
         case "ArrowRight":
             dx = MOVE_VALUE;
-            currentKey = null;
+            sendKeyPressed(currentKey);
             sendDX();
-            sendKeyPressed("d");
+            currentKey = null;
             break;
 
         case "w":
         case "W":
         case "ArrowUp":
             dy = -MOVE_VALUE;
-            currentKey = null;
+            sendKeyPressed(currentKey);
             sendDX();
-            sendKeyPressed("w");
+            currentKey = null;
             break;
 
         case "s":
         case "S":
         case "ArrowDown":
             dy = MOVE_VALUE;
-            currentKey = null;
+            sendKeyPressed(currentKey);
             sendDX();
-            sendKeyPressed("s");
+            currentKey = null;
             break;
     }
 
@@ -133,12 +134,12 @@ function boundaries(){
 
 //sends coordinates (currently only x) to server
 function sendDX() {
-    stompClient.send("/index/PlayerInfo", {}, JSON.stringify(x));
+    stompClient.send("/index/com/gg/player", {}, JSON.stringify(x));
 }
 
 //sends last key pressed to server
 function sendKeyPressed(e){
-    stompClient.send("/index/KeyboardInput", {}, JSON.stringify(e));
+    stompClient.send("/index/com/gg/keyboardinput", {}, JSON.stringify(e));
 }
 
 // ***** The following methods display 'debugging'    *****

@@ -1,4 +1,4 @@
-package Init_Controllers;
+package com.gg.controllers;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
