@@ -14,7 +14,6 @@ var dy = 0;
 
 
 
-
 function init(){ // called on startup
     console.log("v1");
     drawing = document.getElementById("drawing");
