@@ -98,7 +98,6 @@ function draw(){
     //check for boundaries
     boundaries();
 
-
     //draw the image
     con.drawImage(playerSprite, x, y, SPR_WIDTH, SPR_HEIGHT);
     //draw a rectangle
