@@ -15,10 +15,10 @@ public class PlayerController {
 
     @MessageMapping(value = "/com/gg/player")
     @SendTo("/topic/moveto")
-    public Message playerpos(Player player) throws Exception{
-
+    public Message playerpos(Player player){
         log.info("getting the player position");
-        return new Message(HtmlUtils.htmlEscape(Integer.toString(player.getX())));
+        String cords = String.format("(%d, %d)", player.getX(), player.getY());
+        return new Message(HtmlUtils.htmlEscape(cords));
     }
 
 }

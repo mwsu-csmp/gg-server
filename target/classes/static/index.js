@@ -14,7 +14,6 @@ var dy = 0;
 
 
 
-
 function init(){ // called on startup
     console.log("v1");
     drawing = document.getElementById("drawing");
@@ -43,7 +42,6 @@ function connect() {
 }
 
 // updates currentKey with the latest key pressed.
-// SENDKEYPRESSED WILL BE UPDATED TO NOT BE HARD CODED
 function updateKeys(e){
     let currentKey = e.key;
     console.log(currentKey);
@@ -100,7 +98,6 @@ function draw(){
     //check for boundaries
     boundaries();
 
-
     //draw the image
     con.drawImage(playerSprite, x, y, SPR_WIDTH, SPR_HEIGHT);
     //draw a rectangle
@@ -133,8 +130,8 @@ function boundaries(){
 }//end of wrap
 
 //sends coordinates (currently only x) to server
-function sendDX() {
-    stompClient.send("/index/com/gg/player", {}, JSON.stringify(x));
+function sendDX(){
+    stompClient.send("/index/com/gg/player", {}, JSON.stringify({x: this.x, y: this.y}));
 }
 
 //sends last key pressed to server
@@ -147,7 +144,7 @@ function sendKeyPressed(e){
 
 //x (soon to be y) coordinates
 function showXY(coordinates) {
-     document.getElementById('serverX').innerHTML = "Server Coordinates: " + coordinates;
+     document.getElementById('serverXY').innerHTML = "Server Coordinates: " + coordinates;
 }
 
 //last key pressed (not working yet)
