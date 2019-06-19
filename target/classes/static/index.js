@@ -6,23 +6,29 @@ CANV_HEIGHT = 200;
 CANV_WIDTH = 200;
 SPR_HEIGHT = 40;
 SPR_WIDTH = 40;
-MOVE_VALUE = 40;
-var x = 80;
-var y = 80;
+MOVE_VALUE = 60;
+var x = 120;
+var y = 120;
 var dx = 0;
 var dy = 0;
 
-
-
+var app;
+var container;
+var grassTile;
 
 function init(){ // called on startup
     console.log("v1");
     drawing = document.getElementById("drawing");
     con = drawing.getContext("2d");
+    //getting images TODO: search for pixi texture loading
     playerSprite = document.getElementById("PlayerSprite");
+    grassTile = document.getElementById("grass");
+    setupPixi();
+
     document.onkeydown = updateKeys;//gets key presses
     connect();
     //calls the method draw continuously every 300 ms
+
     setInterval(draw, 300);
 }
 function connect() {
@@ -39,12 +45,17 @@ function connect() {
         stompClient.subscribe('/topic/keyboard', function(readKey) {
             showKeyPressed(JSON.parse(readKey.body).content);
         });
+        stompClient.subscribe('/topic/room', function(readKey) {
+            showTiles(JSON.parse(readKey.body).content);
+        });
+        sendInitRequest();
+
     });
 }
 
 // updates currentKey with the latest key pressed.
-// SENDKEYPRESSED WILL BE UPDATED TO NOT BE HARD CODED
 function updateKeys(e){
+
     let currentKey = e.key;
     console.log(currentKey);
     switch (currentKey){
@@ -89,8 +100,6 @@ function updateKeys(e){
 } // end updateKeys
 function draw(){
 
-    //clear background
-    con.clearRect(0, 0, 200, 200);
     //move the image
     x += dx;
     dx = 0;
@@ -99,14 +108,9 @@ function draw(){
 
     //check for boundaries
     boundaries();
+    createScene();
+    updatePlayer(container);
 
-
-    //draw the image
-    con.drawImage(playerSprite, x, y, SPR_WIDTH, SPR_HEIGHT);
-    //draw a rectangle
-    con.strokeStyle = "black";//border color
-    con.lineWidth = 5;//line width
-    con.strokeRect(0, 0, CANV_WIDTH, CANV_HEIGHT);
 
     //updating displayed coordinates
     document.getElementById('coordinates').innerHTML = "Coordinates: (" + (x/MOVE_VALUE) + "," + (y/MOVE_VALUE) + ")";
@@ -116,25 +120,83 @@ function draw(){
 
 //checks to see if the player is against a wall
 function boundaries(){
-    if (x >= CANV_WIDTH){
+    if (x >= 240){
         //subtracts offset of character sprite
-        x = CANV_WIDTH - SPR_WIDTH;
+        x = 240;
     }
     if (x < 0){
         x = 0;
     }
-    if (y >= CANV_HEIGHT){
+    if (y >= 240){
         //subtracts offset of character sprite
-        y = CANV_HEIGHT - SPR_HEIGHT;
+        y = 240;
     } // end if
     if (y < 0){
         y = 0;
     }
 }//end of wrap
 
+function setupPixi() {
+    app = new PIXI.Application({
+        width: 300, height: 300,
+        backgroundColor: 0x9999bb
+        //resolution: window.devicePixelRatio || 1
+    });
+
+    document.body.appendChild(app.view);
+
+    container = new PIXI.Container();
+    app.stage.addChild(container);
+
+//creating grass textures
+
+}
+function createScene(){
+    const textureGrass = PIXI.Texture.from('grass.png');
+
+    for(let i = 0; i < 70; i++){
+        const grass = new PIXI.Sprite(textureGrass);
+
+        grass.anchor.set(0);
+        grass.height = 60;
+        grass.width = 60;
+        grass.x = (i%10) * 60;
+        grass.y = Math.floor(i/10) * 60;
+        container.addChild(grass);
+
+    }
+    updatePlayer(container);
+}
+
+function updatePlayer(appContainer){
+    const pixiPSprite = PIXI.Texture.from(playerSprite);
+    const userP = new PIXI.Sprite(pixiPSprite);
+    userP.height = 60;
+    userP.width = 60;
+    userP.x = x;
+    userP.y = y;
+    userP.anchor.set(0);
+    appContainer.addChild(userP);
+}
+
+
+function drawTiles(tileCoord){
+    let coord = tileCoord;
+    console.log(coord.length);
+
+    for(let i=0;i<coord.length-1;i+=2){
+        con.drawImage(grassTile,coord[i],coord[i+1])
+    }
+
+}
+
+// ***** The following methods display 'debugging'    *****
+// ***** information that's retrieved from the server *****
+
+
 //sends coordinates (currently only x) to server
-function sendDX() {
-    stompClient.send("/index/com/gg/player", {}, JSON.stringify(x));
+function sendDX(){
+    stompClient.send("/index/com/gg/player", {}, JSON.stringify({x: this.x, y: this.y}));
 }
 
 //sends last key pressed to server
@@ -142,15 +204,24 @@ function sendKeyPressed(e){
     stompClient.send("/index/com/gg/keyboardinput", {}, JSON.stringify(e));
 }
 
-// ***** The following methods display 'debugging'    *****
-// ***** information that's retrieved from the server *****
+function sendInitRequest(){
+    console.log("Board Received");
+    stompClient.send("/index/com/gg/board", {}, JSON.stringify(1))
+
+}
 
 //x (soon to be y) coordinates
 function showXY(coordinates) {
-     document.getElementById('serverX').innerHTML = "Server Coordinates: " + coordinates;
+     document.getElementById('serverXY').innerHTML = "Server Coordinates: " + coordinates;
 }
 
 //last key pressed (not working yet)
 function showKeyPressed(keyPressed){
     document.getElementById('keyPressed').innerHTML = "Last Key Pressed: " + keyPressed;
+}
+
+function showTiles(tiletext) {
+    document.getElementById('tileLocation').innerHTML = "Tile: " + tiletext;
+    console.log(tiletext);
+    drawTiles(tiletext.split(","));
 }
