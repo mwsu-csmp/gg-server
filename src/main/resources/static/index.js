@@ -130,8 +130,8 @@ function boundaries(){
 }//end of wrap
 
 //sends coordinates (currently only x) to server
-function sendDX() {
-    stompClient.send("/index/com/gg/player", {}, JSON.stringify(x));
+function sendDX(){
+    stompClient.send("/index/com/gg/player", {}, JSON.stringify({x: this.x, y: this.y}));
 }
 
 //sends last key pressed to server
@@ -144,7 +144,7 @@ function sendKeyPressed(e){
 
 //x (soon to be y) coordinates
 function showXY(coordinates) {
-     document.getElementById('serverX').innerHTML = "Server Coordinates: " + coordinates;
+     document.getElementById('serverXY').innerHTML = "Server Coordinates: " + coordinates;
 }
 
 //last key pressed (not working yet)
