@@ -182,15 +182,7 @@ function updatePlayer(appContainer){
 }
 
 
-function drawTiles(tileCoord){
-    let coord = tileCoord;
-    console.log(coord.length);
 
-    for(let i=0;i<coord.length-1;i+=2){
-        con.drawImage(grassTile,coord[i],coord[i+1])
-    }
-
-}
 
 function drawCharMap(){
     let map =
@@ -258,5 +250,4 @@ function showKeyPressed(keyPressed){
 function showTiles(tiletext) {
     document.getElementById('tileLocation').innerHTML = "Tile: " + tiletext;
     console.log(tiletext);
-    drawTiles(tiletext.split(","));
 }
