@@ -1,73 +1,21 @@
-<!DOCTYPE HTML>
-<html lang = "en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-
-    <!-- this is code to logout -->
-    <button onclick="myFunction()">logout</button>
+    <meta charset="UTF-8">
+    would you like to log in?
+    <!-- this is code to login -->
+    <button onclick="myFunction()">login</button>
 
     <script>
         function myFunction() {
-            location.replace("http://localhost:8080/logout")
+            location.replace("http://localhost:8080/mainGame/index.html")
         }
     </script>
-    <!-- this is code to logout -->
+    <!-- this is code to login -->
 
-
-    <meta charset = "UTF-8" />
-    <style type = "text/css">
-        .hidden{
-            display: none;
-        }
-    </style>
-    <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <script src="/webjars/jquery/jquery.min.js"></script>
-    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
-    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
-    <script src="/index.js?v=1"></script>
-    <script src="/pixi.min.js"></script>
-
-
+    <title>Title</title>
 </head>
-
-
-<body onload = "init()">
-
-
-<img class = "hidden"
-     id = "PlayerSprite"
-     src = "playerSp.png"
-     alt = "player" />
-
-<img class = "hidden"
-     id = "grass"
-     src = "grass.png"
-     alt = "grass" />
-
-<img class = "hidden"
-     id = "grassDead"
-     src = "grass_dead.png"
-     alt = "dead grass" />
-
-<img class = "hidden"
-     id = "tileA2_outside"
-     src = "tileA2_outside.png"
-     alt = tileA2_outside" />
-
-<canvas
-        id="cropTest"
-        width="300"
-        height="300">
-</canvas>
-
-
-
-
-<h1>Press a Key to update Coordinates</h1>
-<p id = "coordinates"></p>
-<p id = "actualXY"></p>
-<p id = "serverXY">Server Coordinates: </p>
-<p id = "keyPressed">Last Key Pressed: </p>
-<p id = "tileLocation"></p>
+<body>
 
 </body>
 </html>
