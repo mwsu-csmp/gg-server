@@ -1,6 +1,18 @@
 <!DOCTYPE HTML>
 <html lang = "en">
 <head>
+
+    <!-- this is code to logout -->
+    <button onclick="myFunction()">logout</button>
+
+    <script>
+        function myFunction() {
+            location.replace("http://localhost:8080/logout")
+        }
+    </script>
+    <!-- this is code to logout -->
+
+
     <meta charset = "UTF-8" />
     <style type = "text/css">
         .hidden{
@@ -16,7 +28,10 @@
 
 
 </head>
+
+
 <body onload = "init()">
+
 
 <img class = "hidden"
      id = "PlayerSprite"
