@@ -156,7 +156,7 @@ function setupPixi() {
 
 }
 function createScene(){
-    const textureGrass = PIXI.Texture.from("/grass.png");
+    const textureGrass = PIXI.Texture.from(grassTile);
 
     for(let i = 0; i < 70; i++){
         const grass = new PIXI.Sprite(textureGrass);
