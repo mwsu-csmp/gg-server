@@ -1,10 +1,12 @@
-com\gg\controllers\KeyController.class
 com\gg\rooms\Sandbox.class
-com\gg\controllers\GGSecurityConfig.class
-com\gg\keyboardinput\Keyboard.class
+com\gg\controllers\GameMapping.class
 com\gg\controllers\RoomController.class
-com\gg\controllers\Application.class
 com\gg\controllers\PlayerController.class
-com\gg\controllers\Message.class
 com\gg\player\Player.class
 com\gg\controllers\WebSocketConfig.class
+com\gg\controllers\KeyController.class
+com\gg\controllers\GGSecurityConfig.class
+com\gg\keyboardinput\Keyboard.class
+com\gg\controllers\Application.class
+com\gg\controllers\EventLogger.class
+com\gg\controllers\Message.class
