@@ -1,4 +1,4 @@
-package com.gg.controllers;
+package com.controllers;
 
 import edu.missouriwestern.csmp.gg.base.Event;
 import edu.missouriwestern.csmp.gg.base.EventListener;

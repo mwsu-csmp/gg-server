@@ -1,4 +1,4 @@
-package com.gg.rooms;
+package com.rooms;
 
 
 public class Sandbox{

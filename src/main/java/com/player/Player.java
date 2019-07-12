@@ -1,4 +1,4 @@
-package com.gg.player;
+package com.player;
 
 import org.json.JSONException;
 import org.json.JSONObject;

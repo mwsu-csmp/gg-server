@@ -1,4 +1,4 @@
-package com.gg.controllers;
+package com.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

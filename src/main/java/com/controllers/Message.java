@@ -1,4 +1,4 @@
-package com.gg.controllers;
+package com.controllers;
 
 import java.util.Arrays;
 

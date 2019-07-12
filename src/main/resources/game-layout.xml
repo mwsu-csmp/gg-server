@@ -16,10 +16,10 @@
         <entry value="goal-barrier" key="⚐"/>
     </util:map>
 
-    <bean id="outside-map" class="com.gg.controllers.GameMapping" factory-method="loadMap">
+    <bean id="outside-map" class="com.controllers.GameMapping" factory-method="loadMap">
         <constructor-arg value="outside-map.txt"/>
     </bean>
-    <bean id="aggensteinFoyer-map" class="com.gg.controllers.GameMapping" factory-method="loadMap">
+    <bean id="aggensteinFoyer-map" class="com.controllers.GameMapping" factory-method="loadMap">
         <constructor-arg value="aggensteinFoyer-map.txt"/>
     </bean>
 

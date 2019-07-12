@@ -1,6 +1,6 @@
-package com.gg.controllers;
+package com.controllers;
 
-import com.gg.keyboardinput.Keyboard;
+import com.keyboardinput.Keyboard;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
@@ -13,7 +13,7 @@ public class KeyController {
 
     Logger log = LoggerFactory.getLogger(this.getClass());
 
-    @MessageMapping(value = "/com/gg/keyboardinput")
+    @MessageMapping(value = "/com/keyboardinput")
     @SendTo("/topic/keyboard")
     public Message readKey(Keyboard key) throws Exception{
 

@@ -1,6 +1,6 @@
-package com.gg.controllers;
+package com.controllers;
 
-import com.gg.player.Player;
+import com.player.Player;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
@@ -13,7 +13,7 @@ public class PlayerController {
 
     Logger log = LoggerFactory.getLogger(this.getClass());
 
-    @MessageMapping(value = "/com/gg/player")
+    @MessageMapping(value = "/com/player")
     @SendTo("/topic/moveto")
     public Message playerpos(Player player){
         log.info("getting the player position");

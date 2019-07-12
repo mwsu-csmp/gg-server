@@ -1,11 +1,10 @@
-package com.gg.controllers;
+package com.controllers;
 
 import edu.missouriwestern.csmp.gg.base.Board;
 import edu.missouriwestern.csmp.gg.base.Entity;
 import edu.missouriwestern.csmp.gg.base.Game;
+import edu.missouriwestern.csmp.gg.base.HasProperties;
 import edu.missouriwestern.csmp.gg.base.events.GameStartEvent;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.task.TaskExecutor;
@@ -15,6 +14,7 @@ import org.springframework.stereotype.Component;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Map;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -24,6 +24,21 @@ public class GameMapping extends Game {
     private static Logger logger = Logger.getLogger(GameMapping.class.getCanonicalName());
 
     private TaskExecutor taskExecutor;
+
+    protected static void save(HasProperties object) {
+        String properties = "";
+        for(Map.Entry properties1: object.getProperties().entrySet()){
+            properties += String.format(" %s: ", properties1.getKey()) + properties1.getValue() + ",";
+        }
+
+        if (properties.endsWith(",")){
+            properties = properties.substring(1, properties.length() - 1);
+        }
+
+        Application.session.run(
+                String.format("CREATE (ns:% { %s })", properties)
+        );
+    }
 
     public GameMapping() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
