@@ -5,8 +5,10 @@ package com.controllers;
 import org.neo4j.driver.v1.*;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ImportResource;
 
 @SpringBootApplication
+@ImportResource("classpath:game-layout.xml")
 public class Application {
     protected static Session session;
 
