@@ -20,6 +20,8 @@ let tileA2;
 let drawing;
 let con;
 
+let boardInfoURL = '/board';
+
 function init(){ // called on startup
     drawing = document.getElementById("cropTest");
     con = drawing.getContext("2d");
@@ -32,7 +34,7 @@ function init(){ // called on startup
     document.onkeydown = updateKeys;//gets key presses
     connect();
     //calls the method draw continuously every 300 ms
-    drawCharMap();
+    drawCharMap('outside');  // TODO: get board name from entity creation event for player avatar
     setInterval(draw, 300);
 }
 function connect() {
@@ -184,31 +186,32 @@ function updatePlayer(appContainer){
 
 
 
-function drawCharMap(){
-    let map =
-        "..#..\n"+
-        ".###.\n"+
-        "#####\n"+
-        ".###.\n"+
-        "..#..";
-    let xi;
-    let yi = 0;
-    for(xi = 0;xi<=map.length;xi++){
+function drawCharMap(boardName){
+    // TODO: this doesn't properly draw arbitrary maps yet. Not sure what the problem is.
+    $.getJSON(boardInfoURL+'/'+boardName, function(board) { // pull board info from AJAX
+        let xi;
+        let yi = 0;
+        var map = board.tilemap;  // retrieve map string from JSON
+        var tileCharMap = board.tileTypes;
+        for(xi = 0;xi<=map.length;xi++){
 
-        if(map.charAt(xi) === "\n"){
-            yi++;
-            console.log(xi + "," + yi);
-        }else{
-            con.drawImage(getCharTile(map.charAt(xi)), (xi*60)-(yi*360), yi*60, 60,60);
-            console.log("Drawing image at: " + xi + "," + yi);
+            if(map.charAt(xi) === "\n"){
+                yi++;
+                console.log(xi + "," + yi);
+            }else{
+                con.drawImage(getCharTile(tileCharMap[map.charAt(xi)]), (xi*60)-(yi*360), yi*60, 60,60);
+                console.log("Drawing image at: " + xi + "," + yi);
+            }
         }
-    }
 
+    });
 }
 
-function getCharTile(char){
-    switch(char){
-        case "#": return grassTile;
+function getCharTile(tileType){
+    return grassTile;
+    // TODO: load known textures in to a map, access map here
+    switch(tileType){
+        case 'floor': return grassTile;
         default: return deadTile;
     }
 }
