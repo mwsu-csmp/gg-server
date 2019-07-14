@@ -99,7 +99,7 @@
                         </bean>
                     </key>
                     <map>
-                        <entry key="portal-destination-board" value=""/> //add value when next board is created
+                        <entry key="portal-destination-board" value="csmp-foyer"/>
                     </map>
                 </entry>
             </map>
