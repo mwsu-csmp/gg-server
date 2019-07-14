@@ -35,8 +35,16 @@ public class GameMapping extends Game {
             properties = properties.substring(1, properties.length() - 1);
         }
 
+        String type = "";
+
+        if (object instanceof PlayerController){
+            type = "Player";
+        } else {
+            type = "Entity";
+        }
+
         Application.session.run(
-                String.format("CREATE (ns:% { %s })", properties)
+                String.format("CREATE (ns:% { %s })", type, properties)
         );
     }
 
