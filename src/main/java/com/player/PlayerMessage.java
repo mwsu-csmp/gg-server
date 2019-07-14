@@ -6,20 +6,24 @@ import org.json.JSONStringer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Player  {
+// currently represents a message sent from the client to the server
+// TODO: use CommandEvents instead
+
+@Deprecated
+public class PlayerMessage {
     private int x;
     private int y;
     Logger log = LoggerFactory.getLogger(this.getClass());
 
-    public Player(){
+    public PlayerMessage(){
 
     }
 
-    public Player(int x){
+    public PlayerMessage(int x){
         this.x = x;
     }
 
-    public Player(JSONObject cords) throws JSONException {
+    public PlayerMessage(JSONObject cords) throws JSONException {
         this.x = cords.getInt("x");
         this.y =  cords.getInt("y");
         log.info(String.format("X: %d, Y: %d", this.x, this.y));
