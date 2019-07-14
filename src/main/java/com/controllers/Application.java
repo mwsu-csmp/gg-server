@@ -14,7 +14,7 @@ public class Application {
 
     public static void main(String[] args) {
         try {
-            Driver driver = GraphDatabase.driver("bolt://localhost:7687", AuthTokens.basic("neo4j","111096"));
+            Driver driver = GraphDatabase.driver("bolt://localhost:7687", AuthTokens.basic("neo4j",""));
             session = driver.session();
         } catch(Error e){
             e.printStackTrace();
