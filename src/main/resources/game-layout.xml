@@ -25,7 +25,7 @@
     <bean id="aggensteinFoyer-map" class="com.controllers.GameMapping" factory-method="loadMap">
         <constructor-arg value="aggensteinFoyer-map.txt"/>
     </bean>
-    <bean id="spellcraftFoyer-map." class="com.controllers.GameMapping" factory-method="loadMap">
+    <bean id="spellcraftFoyer-map" class="com.controllers.GameMapping" factory-method="loadMap">
         <constructor-arg value="spellcraftFoyer-map.txt"/>
     </bean>
 
