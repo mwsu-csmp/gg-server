@@ -28,7 +28,9 @@ public class WebSocketEventListener {
     @EventListener
     public void handleWebSocketConnectListener(SessionConnectedEvent event) {
         logger.info("player connected: " + event.getUser().getName());
-        game.addPlayer(new StompClient(event.getUser().getName(), game));
+        StompClient stompClient = new StompClient(event.getUser().getName(), game);
+        game.addPlayer(stompClient);
+        GameMapping.save(stompClient);
     }
 
     @EventListener
