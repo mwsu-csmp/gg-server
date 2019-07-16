@@ -72,7 +72,7 @@
     <bean id="Foyer" class="edu.missouriwestern.csmp.gg.base.Board">
         <constructor-arg index="0" ref="tile-types"/>
         <constructor-arg index="1" ref="game"/>
-        <constructor-arg index="2" value="Puzzle #1"/>
+        <constructor-arg index="2" value="Foyer"/>
         <constructor-arg index="3" ref="Foyer-map"/>
         <constructor-arg index="4">
             <map>
@@ -99,24 +99,12 @@
                     <key>
                         <bean class="net.sourcedestination.funcles.tuple.Pair"
                               factory-method="makePair">
-                            <constructor-arg index="0" value="8"/>
-                            <constructor-arg index="1" value="1"/>
+                            <constructor-arg index="0" value="22"/>
+                            <constructor-arg index="1" value="3"/>
                         </bean>
                     </key>
                     <map>
                         <entry key="portal-destination-board" value="aggensteinFoyer"/>
-                    </map>
-                </entry>
-                <entry>
-                    <key>
-                        <bean class="net.sourcedestination.funcles.tuple.Pair"
-                              factory-method="makePair">
-                            <constructor-arg index="0" value="8"/>
-                            <constructor-arg index="1" value="1"/>
-                        </bean>
-                    </key>
-                    <map>
-                        <entry key="portal-destination-board" value="spellcraftFoyer"/>
                     </map>
                 </entry>
             </map>
@@ -128,7 +116,7 @@
     <bean id="aggensteinFoyer" class="edu.missouriwestern.csmp.gg.base.Board">
         <constructor-arg index="0" ref="tile-types"/>
         <constructor-arg index="1" ref="game"/>
-        <constructor-arg index="2" value="Puzzle #1"/>
+        <constructor-arg index="2" value="aggensteinFoyer"/>
         <constructor-arg index="3" ref="aggensteinFoyer-map"/>
         <constructor-arg index="4">
             <map>
@@ -160,7 +148,7 @@
                         </bean>
                     </key>
                     <map>
-                        <entry key="portal-destination-board" value="csmp-foyer"/>
+                        <entry key="portal-destination-board" value="spellcraftFoyer"/>
                     </map>
                 </entry>
             </map>
@@ -170,7 +158,7 @@
     <bean id="spellcraftFoyer" class="edu.missouriwestern.csmp.gg.base.Board">
         <constructor-arg index="0" ref="tile-types"/>
         <constructor-arg index="1" ref="game"/>
-        <constructor-arg index="2" value="Puzzle #1"/>
+        <constructor-arg index="2" value="spellcrafftFoyer"/>
         <constructor-arg index="3" ref="spellcraftFoyer-map"/>
         <constructor-arg index="4">
             <map>
@@ -197,7 +185,7 @@
                     <key>
                         <bean class="net.sourcedestination.funcles.tuple.Pair"
                               factory-method="makePair">
-                            <constructor-arg index="0" value="8"/>
+                            <constructor-arg index="0" value="5"/>
                             <constructor-arg index="1" value="1"/>
                         </bean>
                     </key>
