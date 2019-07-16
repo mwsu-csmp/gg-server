@@ -19,8 +19,14 @@
     <bean id="outside-map" class="com.controllers.GameMapping" factory-method="loadMap">
         <constructor-arg value="outside-map.txt"/>
     </bean>
+    <bean id="Foyer-map" class="com.controllers.GameMapping" factory-method="loadMap">
+        <constructor-arg value="Foyer-map.txt"/>
+    </bean>
     <bean id="aggensteinFoyer-map" class="com.controllers.GameMapping" factory-method="loadMap">
         <constructor-arg value="aggensteinFoyer-map.txt"/>
+    </bean>
+    <bean id="spellcraftFoyer-map." class="com.controllers.GameMapping" factory-method="loadMap">
+        <constructor-arg value="spellcraftFoyer-map.txt"/>
     </bean>
 
 
@@ -55,7 +61,62 @@
                         </bean>
                     </key>
                     <map>
+                        <entry key="portal-destination-board" value="Foyer"/>
+                    </map>
+                </entry>
+            </map>
+        </constructor-arg>
+    </bean>
+
+
+    <bean id="Foyer" class="edu.missouriwestern.csmp.gg.base.Board">
+        <constructor-arg index="0" ref="tile-types"/>
+        <constructor-arg index="1" ref="game"/>
+        <constructor-arg index="2" value="Puzzle #1"/>
+        <constructor-arg index="3" ref="Foyer-map"/>
+        <constructor-arg index="4">
+            <map>
+                <entry key="*">
+                    <map>
+                        <entry key="entering-entity-spawn" value="true"/>
+                    </map>
+                </entry>
+                <entry key="#">
+                    <map>
+                        <entry key="impassable" value="true"/>
+                    </map>
+                </entry>
+                <entry key="⚐">
+                    <map>
+                        <entry key="impassable" value="true"/>
+                    </map>
+                </entry>
+            </map>
+        </constructor-arg>
+        <constructor-arg index="5">
+            <map>
+                <entry>
+                    <key>
+                        <bean class="net.sourcedestination.funcles.tuple.Pair"
+                              factory-method="makePair">
+                            <constructor-arg index="0" value="8"/>
+                            <constructor-arg index="1" value="1"/>
+                        </bean>
+                    </key>
+                    <map>
                         <entry key="portal-destination-board" value="aggensteinFoyer"/>
+                    </map>
+                </entry>
+                <entry>
+                    <key>
+                        <bean class="net.sourcedestination.funcles.tuple.Pair"
+                              factory-method="makePair">
+                            <constructor-arg index="0" value="8"/>
+                            <constructor-arg index="1" value="1"/>
+                        </bean>
+                    </key>
+                    <map>
+                        <entry key="portal-destination-board" value="spellcraftFoyer"/>
                     </map>
                 </entry>
             </map>
@@ -100,6 +161,48 @@
                     </key>
                     <map>
                         <entry key="portal-destination-board" value="csmp-foyer"/>
+                    </map>
+                </entry>
+            </map>
+        </constructor-arg>
+    </bean>
+
+    <bean id="spellcraftFoyer" class="edu.missouriwestern.csmp.gg.base.Board">
+        <constructor-arg index="0" ref="tile-types"/>
+        <constructor-arg index="1" ref="game"/>
+        <constructor-arg index="2" value="Puzzle #1"/>
+        <constructor-arg index="3" ref="spellcraftFoyer-map"/>
+        <constructor-arg index="4">
+            <map>
+                <entry key="*">
+                    <map>
+                        <entry key="entering-entity-spawn" value="true"/>
+                    </map>
+                </entry>
+                <entry key="#">
+                    <map>
+                        <entry key="impassable" value="true"/>
+                    </map>
+                </entry>
+                <entry key="⚐">
+                    <map>
+                        <entry key="impassable" value="true"/>
+                    </map>
+                </entry>
+            </map>
+        </constructor-arg>
+        <constructor-arg index="5">
+            <map>
+                <entry>
+                    <key>
+                        <bean class="net.sourcedestination.funcles.tuple.Pair"
+                              factory-method="makePair">
+                            <constructor-arg index="0" value="8"/>
+                            <constructor-arg index="1" value="1"/>
+                        </bean>
+                    </key>
+                    <map>
+                        <entry key="portal-destination-board" value="Foyer"/>
                     </map>
                 </entry>
             </map>
