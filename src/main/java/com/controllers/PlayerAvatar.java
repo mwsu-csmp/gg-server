@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /** gives a player a presence within the game */
+@Permanent
 public class    PlayerAvatar extends Entity implements EventListener {
 
     private final Player player;
