@@ -45,16 +45,16 @@ function connect() {
 
         // Calls the method playerpos from PlayerController.java and
         // displays the return statement under canvas
-        stompClient.subscribe('/topic/moveto', function(playerpos) {
-            showXY(JSON.parse(playerpos.body).content);
+
+
+        //TODO: example of somthing to do with ajax
+        //sendInitRequest();
+
+
+        stompClient.subscribe('/topic/event', function (eventhelper) {
+            eventPrint(JSON.parse(eventhelper.body).content)
+
         });
-        stompClient.subscribe('/topic/keyboard', function(readKey) {
-            showKeyPressed(JSON.parse(readKey.body).content);
-        });
-        stompClient.subscribe('/topic/room', function(readKey) {
-            showTiles(JSON.parse(readKey.body).content);
-        });
-        sendInitRequest();
 
     });
 }
@@ -69,36 +69,28 @@ function updateKeys(e){
         case "a":
         case "A":
         case "ArrowLeft":
-            dx = -MOVE_VALUE;
-            sendKeyPressed(currentKey);
-            sendDX();
+            sendCommand("MOVE", "WEST");
             currentKey = null;
             break;
 
         case "d":
         case "D":
         case "ArrowRight":
-            dx = MOVE_VALUE;
-            sendKeyPressed(currentKey);
-            sendDX();
+            sendCommand("MOVE", "EAST");
             currentKey = null;
             break;
 
         case "w":
         case "W":
         case "ArrowUp":
-            dy = -MOVE_VALUE;
-            sendKeyPressed(currentKey);
-            sendDX();
+            sendCommand("MOVE", "NORTH");
             currentKey = null;
             break;
 
         case "s":
         case "S":
         case "ArrowDown":
-            dy = MOVE_VALUE;
-            sendKeyPressed(currentKey);
-            sendDX();
+            sendCommand("MOVE", "SOUTH");
             currentKey = null;
             break;
     }
@@ -230,9 +222,14 @@ function sendDX(){
     stompClient.send("/index/com/gg/player", {}, JSON.stringify({x: this.x, y: this.y}));
 }
 
-//sends last key pressed to server
-function sendKeyPressed(e){
-    stompClient.send("/index/com/gg/keyboardinput", {}, JSON.stringify(e));
+//sends a command
+function sendCommand(command, parameter) {
+    stompClient.send("/index/gg/command", {}, JSON.stringify(
+        {
+            "command": command,
+            "parameter": parameter
+        }
+    ));
 }
 
 function sendInitRequest(){
@@ -253,4 +250,9 @@ function showKeyPressed(keyPressed){
 function showTiles(tiletext) {
     document.getElementById('tileLocation').innerHTML = "Tile: " + tiletext;
     console.log(tiletext);
+}
+
+
+function eventPrint(event) {
+    console.log("EVENTLOGGER:"+event);
 }

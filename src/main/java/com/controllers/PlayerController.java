@@ -1,25 +1,41 @@
 package com.controllers;
-
-import com.player.PlayerMessage;
+import edu.missouriwestern.csmp.gg.base.*;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.util.HtmlUtils;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
+import java.security.Principal;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import org.springframework.stereotype.Controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import static edu.missouriwestern.csmp.gg.base.events.CommandEvent.issueCommandEventFromJson;
 
 @Controller
 public class PlayerController {
 
+    private Gson gson;
+
+    @Autowired
+    private GameMapping game;
+
     Logger log = LoggerFactory.getLogger(this.getClass());
 
-    // TODO: receive CommandEvents here instead and publish them for all event listeners
-    @MessageMapping(value = "/com/player")
-    @SendTo("/topic/moveto")
-    public Message playerpos(PlayerMessage player){
-        log.info("getting the player position");
-        String cords = String.format("(%d, %d)", player.getX(), player.getY());
-        return new Message(HtmlUtils.htmlEscape(cords));
+    public PlayerController() {
+        var gb = new GsonBuilder();
+        gson = gb.create();
+    }
+
+    @MessageMapping("/gg/command")
+    public void receiveCommand(
+            String data,
+            Principal user
+    ){
+        issueCommandEventFromJson(game, user.getName(), data);
     }
 
 }

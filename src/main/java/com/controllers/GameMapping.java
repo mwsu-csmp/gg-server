@@ -7,6 +7,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -19,10 +20,13 @@ public class GameMapping extends Game {
 
     private static Logger logger = Logger.getLogger(GameMapping.class.getCanonicalName());
 
+    @Autowired
+    private StompEvent stompEventPublisher;
+
     private TaskExecutor taskExecutor;
 
     public GameMapping() throws Exception {
-        super(new Neo4jDatastore("bolt://localhost:7687", "neo4j", "111096"));
+        super(new Neo4jDatastore("bolt://localhost:7687", "neo4j", "yeet"));
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(4);
         executor.setMaxPoolSize(4);
@@ -48,6 +52,7 @@ public class GameMapping extends Game {
             logger.info("loading map " + mapName + ": \n" + maps.get(mapName));
         }
         registerListener(new EventLogger());  // log all events
+        registerListener(stompEventPublisher);  // log all events
         accept(new GameStartEvent(this));     // indicate game is starting
     }
 
