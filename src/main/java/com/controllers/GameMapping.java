@@ -2,6 +2,8 @@ package com.controllers;
 
 import edu.missouriwestern.csmp.gg.base.*;
 import edu.missouriwestern.csmp.gg.base.events.GameStartEvent;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.task.TaskExecutor;
@@ -23,10 +25,12 @@ public class GameMapping extends Game {
     @Autowired
     private StompEvent stompEventPublisher;
 
+    @Autowired
+    @Qualifier("taskExecutor")
     private TaskExecutor taskExecutor;
 
     public GameMapping() throws Exception {
-        super(new Neo4jDatastore("bolt://localhost:7687", "neo4j", ""));
+        super(new Neo4jDatastore("bolt://localhost:7687", "neo4j", "password"));
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(4);
         executor.setMaxPoolSize(4);

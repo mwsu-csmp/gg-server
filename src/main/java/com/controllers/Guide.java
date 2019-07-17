@@ -50,7 +50,7 @@ public class Guide extends Entity implements EventListener, Runnable {
     }
 
     public void reset() {
-        var foyer = getGame().getBoard("foyer");
+        var foyer = getGame().getBoard("Foyer");
         var location = foyer.getTileStream()  // find location of guide spawn tile (should be exactly 1)
                 .filter(tile -> tile.getType().equals("guide-spawn"))
                 .findFirst().get();
@@ -63,6 +63,8 @@ public class Guide extends Entity implements EventListener, Runnable {
             try { Thread.sleep(4000); } catch(Exception e) {}
             logger.info("guide walking around");
             var direction = Direction.values()[(int)(Math.random()*4)];
+            if(!(getGame().getEntityLocation(this) instanceof  Tile))
+                continue; // make sure we're on a tile before we try to move
             var location = (Tile)getGame().getEntityLocation(this);
             var board = location.getBoard();
             var destination = board.getAdjacentTile(location, direction);

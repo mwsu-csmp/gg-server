@@ -51,11 +51,9 @@ function connect() {
         //sendInitRequest();
 
 
-        stompClient.subscribe('/topic/event', function (eventhelper) {
-            eventPrint(JSON.parse(eventhelper.body).content)
-
+        stompClient.subscribe('/topic/event', function (event) {
+            eventPrint(JSON.parse(event.body).content);
         });
-
     });
 }
 
