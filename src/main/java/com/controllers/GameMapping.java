@@ -26,7 +26,7 @@ public class GameMapping extends Game {
     private TaskExecutor taskExecutor;
 
     public GameMapping() throws Exception {
-        super(new Neo4jDatastore("bolt://localhost:7687", "neo4j", "yeet"));
+        super(new Neo4jDatastore("bolt://localhost:7687", "neo4j", ""));
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(4);
         executor.setMaxPoolSize(4);

@@ -5,9 +5,7 @@ import edu.missouriwestern.csmp.gg.base.HasProperties;
 import edu.missouriwestern.csmp.gg.base.Player;
 import org.neo4j.driver.v1.*;
 import org.neo4j.driver.v1.types.Node;
-
 import java.util.ArrayList;
-import java.util.ListIterator;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -35,7 +33,7 @@ class Neo4jDatastore implements DataStore {
 
         String type = "";
 
-        if (object instanceof Player) {
+        if (object instanceof PlayerAvatar) {
             type = "Player";
         } else {
             type = "Entity";
@@ -99,8 +97,7 @@ class Neo4jDatastore implements DataStore {
             statementResult = session.run(
                     String.format("MATCH (n { %s })\nReturn n", map.toString())
             );
-        }catch
-        (Error e){}
+        }catch(Error e){}
         if (statementResult != null){
             var list1 = statementResult.list();
             if (!list1.isEmpty()){
@@ -111,5 +108,26 @@ class Neo4jDatastore implements DataStore {
             }
         }
         return list;
+    }
+
+    @Override
+    public int getMaxEntityId() {
+        var returnedValue = -1;
+        StatementResult statementResult = null;
+        try {
+            statementResult = session.run(
+                    String.format("MATCH (n)\nReturn n")
+            );
+        }catch(Error e){}
+        if (statementResult != null) {
+            var list1 = statementResult.list();
+            if (!list1.isEmpty()) {
+                for (Record r : statementResult.list()) {
+                    var id = r.get(0).asNode().get("id");
+                    returnedValue = Math.max(returnedValue, id.asInt());
+                }
+            }
+        }
+        return returnedValue;
     }
 }
