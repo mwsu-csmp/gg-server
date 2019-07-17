@@ -30,7 +30,6 @@ public class WebSocketEventListener {
         logger.info("player connected: " + event.getUser().getName());
         StompClient stompClient = new StompClient(event.getUser().getName(), game);
         game.addPlayer(stompClient);
-        GameMapping.save(stompClient);
     }
 
     @EventListener
