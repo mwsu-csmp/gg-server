@@ -12,6 +12,7 @@
         <entry value="guide-spawn" key="%"/>
         <entry value="player-spawn" key="*"/>
         <entry value="box-spawn" key="B"/>
+        <entry value="chest" key="▣"/>
         <entry value="goal" key="X"/>
         <entry value="goal-barrier" key="⚐"/>
     </util:map>
