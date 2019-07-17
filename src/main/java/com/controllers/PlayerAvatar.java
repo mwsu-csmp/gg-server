@@ -9,7 +9,7 @@ import java.util.Map;
 
 /** gives a player a presence within the game */
 @Permanent
-public class    PlayerAvatar extends Entity implements EventListener {
+public class    PlayerAvatar extends Entity implements EventListener, Container {
 
     private final Player player;
 

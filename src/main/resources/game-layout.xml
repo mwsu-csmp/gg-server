@@ -143,8 +143,8 @@
                     <key>
                         <bean class="net.sourcedestination.funcles.tuple.Pair"
                               factory-method="makePair">
-                            <constructor-arg index="0" value="8"/>
-                            <constructor-arg index="1" value="1"/>
+                            <constructor-arg index="0" value="28"/>
+                            <constructor-arg index="1" value="10"/>
                         </bean>
                     </key>
                     <map>
@@ -185,7 +185,7 @@
                     <key>
                         <bean class="net.sourcedestination.funcles.tuple.Pair"
                               factory-method="makePair">
-                            <constructor-arg index="0" value="5"/>
+                            <constructor-arg index="0" value="1"/>
                             <constructor-arg index="1" value="1"/>
                         </bean>
                     </key>

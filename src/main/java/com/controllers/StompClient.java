@@ -14,6 +14,8 @@ public class StompClient extends Player {
         avatar = new PlayerAvatar(game, this);
     }
 
+    public PlayerAvatar getAvatar() { return avatar; }
+
     @Override
     public String getID() {
         return super.getID();
