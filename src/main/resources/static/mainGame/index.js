@@ -52,7 +52,10 @@ function connect() {
 
 
         stompClient.subscribe('/topic/event', function (event) {
-            eventPrint(JSON.parse(event.body).content);
+           //
+            //
+            // console.log("pass in check: "+event.body.toString());
+            eventReaction(event.body.toString());
         });
     });
 }
@@ -90,6 +93,12 @@ function updateKeys(e){
         case "ArrowDown":
             sendCommand("MOVE", "SOUTH");
             currentKey = null;
+            break;
+
+        case "e":
+        case "E":
+            sendCommand("INTERACTION", "E")
+            currentKey=null;
             break;
     }
 
@@ -251,6 +260,33 @@ function showTiles(tiletext) {
 }
 
 
-function eventPrint(event) {
-    console.log("EVENTLOGGER:"+event);
+function eventReaction(event) {
+    //console.log("EVENTLOGGER:"+event);
+    if(event.toString().includes("MOVE")){
+        changeLocation(event);
+    }
+    else if(event.toString().includes("INTERACTION")){
+
+    }
+    else{
+        console.log("Server gave me information that I cannot use.")
+    }
+
+}
+
+function changeLocation(event) {
+    //TODO: this is temp it will need to change to impliment row and collom not directly adding 40 to x and y
+    if(event.toString().includes("NORTH")){
+        y-=40;
+    }
+    else if(event.toString().includes("WEST")){
+        x-=40;
+    }
+    else if(event.toString().includes("EAST")){
+        x+=40;
+    }
+    else{
+        y+=40;
+    }
+
 }

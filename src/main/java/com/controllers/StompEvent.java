@@ -21,6 +21,8 @@ public class StompEvent implements EventListener {
 
     @Override
     public void accept(Event event) {
+
+        logger.info("Test parse: ");
         messagingTemplate.convertAndSend("/topic/event", event.toString());
     }
 }
