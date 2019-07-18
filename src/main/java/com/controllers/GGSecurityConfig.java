@@ -35,7 +35,11 @@ public class GGSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .antMatchers("/index.html").permitAll()
-                .antMatchers("/mainGame/**").hasRole("USER")
+                .antMatchers("/maingame/**").hasRole("USER")
+                .antMatchers("/board/**").hasRole("USER")
+                .antMatchers("/tile/**").hasRole("USER")
+                .antMatchers("/entity/**").hasRole("USER")
+                .antMatchers("/container/**").hasRole("USER")
                 //.antMatchers("/index.html").hasAnyRole("ADMIN", "USER")
                 .and().formLogin()
                 .and().logout().logoutSuccessUrl("/index.html").permitAll()

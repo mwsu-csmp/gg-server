@@ -12,7 +12,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Map;
 
 @Controller
 public class GameInfoController {
@@ -89,6 +93,17 @@ public class GameInfoController {
             player.getEntities().forEach(ent ->  contents.add(ent.getID()));
         }
         return gson.toJson(contents);
+    }
+
+
+    @GetMapping("/maingame/client")
+    public String viewExercise(Map<String, Object> model,
+                               HttpServletRequest request,
+                               HttpServletResponse response) {
+        var username = request.getUserPrincipal().getName();
+        model.put("username", username);
+
+        return "gameclient.html";
     }
 
 }
