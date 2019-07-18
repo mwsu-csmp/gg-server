@@ -1,14 +1,20 @@
 let playerSprite;
 let grassTile;
 let deadTile;
+let waterTile;
 
 CANV_HEIGHT = 300;
 CANV_WIDTH = 300;
-SPR_HEIGHT = 40;
-SPR_WIDTH = 40;
-MOVE_VALUE = 60;
-let histX;
-let histY;
+
+let boardWidth;
+let boardHeight;
+let charAlias = new Map();
+let tileAlias;
+let boardMap;
+let asdf;
+
+
+TILE_SIZE = 60;
 let x = 120;
 let y = 120;
 let dx = 0;
@@ -16,25 +22,64 @@ let dy = 0;
 let currentKey;
 let app;
 let container;
-let tileA2;
-let drawing;
-let con;
 
 let boardInfoURL = '/board';
 
 function init(){ // called on startup
-    drawing = document.getElementById("cropTest");
-    con = drawing.getContext("2d");
+
     //getting images TODO: search for pixi texture loading
     playerSprite = document.getElementById("PlayerSprite");
     grassTile = document.getElementById("grass");
     deadTile = document.getElementById("grassDead");
+    waterTile = document.getElementById("water");
     setupPixi();
 
     document.onkeydown = updateKeys;//gets key presses
     connect();
     //calls the method draw continuously every 300 ms
-    drawCharMap('outside');  // TODO: get board name from entity creation event for player avatar
+    //drawCharMap('outside');  // TODO: get board name from entity creation event for player avatar
+    asdf = new Map();
+    asdf.set("-", "grass1");
+    asdf.set("#", "deadGrass");
+    asdf.set("@", "door");
+    asdf.set("*", "door");
+
+
+
+    tileAlias = new Map();
+    tileAlias.set("grass1",grassTile);
+    tileAlias.set("deadGrass",deadTile);
+    tileAlias.set("door",grassTile );
+
+    boardHeight = 21//parsedJson.height;
+    boardWidth = 17//parsedJson.width;
+    charAlias = asdf;
+    boardMap =
+        "########@########" +
+        "########-########" +
+        "########-########" +
+        "-##----------###-" +
+        "-----------------" +
+        "-----------------" +
+        "-----------------" +
+        "-----------------" +
+        "#---------------#" +
+        "#---------------#" +
+        "#---------------#" +
+        "#---------------#" +
+        "#---------------#" +
+        "#---------------#" +
+        "#---------------#" +
+        "#---------------#" +
+        "#---------------#" +
+        "#---------------#" +
+        "#---------------#" +
+        "#-------*-------#" +
+        "#################";
+
+
+
+    createScene();
     setInterval(draw, 300);
 }
 function connect() {
@@ -118,23 +163,23 @@ function draw(){
 
 
     //updating displayed coordinates
-    document.getElementById('coordinates').innerHTML = "Coordinates: (" + (x/MOVE_VALUE) + "," + (y/MOVE_VALUE) + ")";
+    document.getElementById('coordinates').innerHTML = "Coordinates: (" + (x/TILE_SIZE) + "," + (y/TILE_SIZE) + ")";
     document.getElementById('actualXY').innerHTML = "Coordinates: (" + x + "," + y + ")";
 
 } // end of draw
 
 //checks to see if the player is against a wall
 function boundaries(){
-    if (x >= 240){
+    if (x >= boardWidth){
         //subtracts offset of character sprite
-        x = 240;
+        x = boardWidth-TILE_SIZE;
     }
     if (x < 0){
         x = 0;
     }
-    if (y >= 240){
+    if (y >= boardHeight){
         //subtracts offset of character sprite
-        y = 240;
+        y = boardHeight-TILE_SIZE;
     } // end if
     if (y < 0){
         y = 0;
@@ -143,7 +188,7 @@ function boundaries(){
 
 function setupPixi() {
     app = new PIXI.Application({
-        width: CANV_WIDTH, height: CANV_HEIGHT,
+        width: 1020, height: 1260,
         backgroundColor: 0x9999bb
         //resolution: window.devicePixelRatio || 1
     });
@@ -157,18 +202,23 @@ function setupPixi() {
 
 }
 function createScene(){
-    const textureGrass = PIXI.Texture.from(grassTile);
+    let pos = 0;
+    console.log(boardMap.length);
 
-    for(let i = 0; i < 70; i++){
-        const grass = new PIXI.Sprite(textureGrass);
+    for(let iy = 0; iy < boardHeight; iy++){
+        for(let ix = 0; ix < boardWidth; ix++) {
+            const textureGrass = PIXI.Texture.from(getTile(boardMap.charAt(pos)));
 
-        grass.height = 60;
-        grass.width = 60;
-        grass.x = (i%10) * 60;
-        grass.y = Math.floor(i/10) * 60;
-        container.addChild(grass);
-
+            const tile = new PIXI.Sprite(textureGrass);
+            tile.height = TILE_SIZE;
+            tile.width = TILE_SIZE;
+            tile.x = ix * TILE_SIZE;
+            tile.y = iy * TILE_SIZE;
+            container.addChild(tile);
+            pos++;
+        }
     }
+
     updatePlayer(container);
 }
 
@@ -183,28 +233,6 @@ function updatePlayer(appContainer){
 }
 
 
-
-
-function drawCharMap(boardName){
-    // TODO: this doesn't properly draw arbitrary maps yet. Not sure what the problem is.
-    $.getJSON(boardInfoURL+'/'+boardName, function(board) { // pull board info from AJAX
-        let xi;
-        let yi = 0;
-        var map = board.tilemap;  // retrieve map string from JSON
-        var tileCharMap = board.tileTypes;
-        for(xi = 0;xi<=map.length;xi++){
-
-            if(map.charAt(xi) === "\n"){
-                yi++;
-                console.log(xi + "," + yi);
-            }else{
-                con.drawImage(getCharTile(tileCharMap[map.charAt(xi)]), (xi*60)-(yi*360), yi*60, 60,60);
-                console.log("Drawing image at: " + xi + "," + yi);
-            }
-        }
-
-    });
-}
 
 function getCharTile(tileType){
     return grassTile;
@@ -239,6 +267,9 @@ function sendCommand(command, parameter) {
     ));
 }
 
+
+
+
 function sendInitRequest(){
     console.log("Board Received");
     stompClient.send("/index/com/gg/board", {}, JSON.stringify(1))
@@ -253,6 +284,8 @@ function showXY(coordinates) {
 function showKeyPressed(keyPressed){
     document.getElementById('keyPressed').innerHTML = "Last Key Pressed: " + keyPressed;
 }
+
+
 
 function showTiles(tiletext) {
     document.getElementById('tileLocation').innerHTML = "Tile: " + tiletext;
@@ -289,4 +322,18 @@ function changeLocation(event) {
         y+=40;
     }
 
+}
+
+function getTile(character){
+    switch(character){
+        case "-":
+            return tileAlias.get(charAlias.get("-"));
+        case "#":
+            return tileAlias.get(charAlias.get("#"));
+        case "@":
+            return tileAlias.get(charAlias.get("@"));
+        case "*":
+            return tileAlias.get(charAlias.get("*"));
+
+    }
 }
