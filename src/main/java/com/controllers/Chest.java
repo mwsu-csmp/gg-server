@@ -11,11 +11,12 @@ public class Chest extends Entity implements Container {
 //    protected TestEntity(Game game, Map<String, String> properties) {
 //        super(game, properties);
 //    }
-    public Chest(Game game) {
+    public Chest(Game game, Container startingLocation) {
         super(game, Map.of("sprites", "chest-normal",
                 "character", "▣",
                 "impassable", "true",
-                "description", "a large chest"));
+                "description", "a large chest"),
+                startingLocation);
     }
 
 

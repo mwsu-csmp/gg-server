@@ -44,7 +44,6 @@ public class Guide extends Entity implements EventListener, Runnable {
                         }
                     }
                 }
-
             }
         }
     }
