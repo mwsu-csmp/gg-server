@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -33,7 +32,7 @@ public class GameInfoController {
         gson = builder.create();
     }
 
-    /** displays the character-string representation of a board */
+    /** displays a JSON description of a board */
     @GetMapping("/board/{boardId}")
     @ResponseBody
     public String getBoard(@PathVariable String boardId) {
@@ -41,6 +40,7 @@ public class GameInfoController {
         return board != null ? board.toString() : "ERROR"; // TODO: error more gracefully
     }
 
+    /** displays a JSON description of the specified entity */
     @GetMapping("/entity/{entityId}")
     @ResponseBody
     public String getEntityDescription(@PathVariable int entityId) {
@@ -48,13 +48,24 @@ public class GameInfoController {
         return entity != null ? entity.toString() : "ERROR"; // TODO: error more gracefully
     }
 
-    @GetMapping("/tile/{tileId}")
+    /** displays a JSON description of the specified tile */
+    @GetMapping("/tile/{boardId}/{column}/{row}")
     @ResponseBody
-    public String getTileDescription(@PathVariable int entityId) {
-        var entity = game.getEntity(entityId);
-        return entity != null ? entity.toString() : "ERROR"; // TODO: error more gracefully
+    public String getTileDescription(@PathVariable String boardId,
+                                     @PathVariable int column,
+                                     @PathVariable int row) {
+        var board = game.getBoard(boardId);
+        var contents = new ArrayList<Integer>(); // contained entity ID's
+        if(board != null) {
+            var tile = board.getTile(column, row);
+            if(tile != null) { // add all entity ID's to the list of ID's
+                return tile.toString();
+            }
+        }
+        return "ERROR";
     }
 
+    /** displays a JSON list of id's of contained entities */
     @GetMapping("/container/tile/{boardId}/{column}/{row}")
     @ResponseBody
     public String getTileContents(@PathVariable String boardId,
@@ -71,9 +82,10 @@ public class GameInfoController {
         return gson.toJson(contents);
     }
 
+    /** displays a JSON list of id's of contained entities */
     @GetMapping("/container/entity/{entityId}")
     @ResponseBody
-    public String getTileContents(@PathVariable int entityId) {
+    public String getEntityContents(@PathVariable int entityId) {
         var entity = game.getEntity(entityId);
         var contents = new ArrayList<Integer>(); // contained entity ID's
         if(entity != null && entity instanceof Container) {// add all entity ID's to the list of ID's
@@ -83,10 +95,10 @@ public class GameInfoController {
         return gson.toJson(contents);
     }
 
-
-    @GetMapping("/container/player/{entityId}")
+    /** displays a JSON list of id's of contained entities */
+    @GetMapping("/container/player/{playerId}")
     @ResponseBody
-    public String getTileContents(@PathVariable String playerId) {
+    public String getPlayerContents(@PathVariable String playerId) {
         var player = game.getPlayer(playerId);
         var contents = new ArrayList<Integer>(); // contained entity ID's
         if(player != null) {// add all entity ID's to the list of ID's
