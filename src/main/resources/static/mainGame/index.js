@@ -157,9 +157,10 @@ function draw(){
     dy = 0;
 
     //check for boundaries
+    updatePlayer(container);
     boundaries();
     createScene();
-    updatePlayer(container);
+
 
 
     //updating displayed coordinates
@@ -170,16 +171,16 @@ function draw(){
 
 //checks to see if the player is against a wall
 function boundaries(){
-    if (x >= boardWidth){
+    if (x >= (boardWidth * TILE_SIZE)){
         //subtracts offset of character sprite
-        x = boardWidth-TILE_SIZE;
+        x = (boardWidth * TILE_SIZE)-TILE_SIZE;
     }
     if (x < 0){
         x = 0;
     }
-    if (y >= boardHeight){
+    if (y >= (boardHeight*TILE_SIZE)){
         //subtracts offset of character sprite
-        y = boardHeight-TILE_SIZE;
+        y = (boardHeight*TILE_SIZE)-TILE_SIZE;
     } // end if
     if (y < 0){
         y = 0;
@@ -310,16 +311,16 @@ function eventReaction(event) {
 function changeLocation(event) {
     //TODO: this is temp it will need to change to impliment row and collom not directly adding 40 to x and y
     if(event.toString().includes("NORTH")){
-        y-=40;
+        y-=TILE_SIZE;
     }
     else if(event.toString().includes("WEST")){
-        x-=40;
+        x-=TILE_SIZE;
     }
     else if(event.toString().includes("EAST")){
-        x+=40;
+        x+=TILE_SIZE;
     }
     else{
-        y+=40;
+        y+=TILE_SIZE;
     }
 
 }
