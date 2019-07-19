@@ -25,10 +25,6 @@ let currentKey;
 let app;
 let container;
 
-let tileA2;
-let drawing;
-let con;
-//let username= document.getElementById("username");
 let boardInfoURL = '/board';
 
 function init(){ // called on startup
@@ -42,7 +38,7 @@ function init(){ // called on startup
     grassTile = document.getElementById("grass");
     deadTile = document.getElementById("grassDead");
     waterTile = document.getElementById("water");
-    setupPixi();
+
 
     document.onkeydown = updateKeys;//gets key presses
     connect();
@@ -59,7 +55,7 @@ function init(){ // called on startup
     tileAlias = new Map();
     tileAlias.set("grass1",grassTile);
     tileAlias.set("deadGrass",deadTile);
-    tileAlias.set("door",grassTile );
+    tileAlias.set("door",waterTile );
 
     boardHeight = 21;//parsedJson.height;
     boardWidth = 17;//parsedJson.width;
@@ -88,7 +84,7 @@ function init(){ // called on startup
         "#################";
 
 
-
+    setupPixi();
     createScene();
     setInterval(draw, 300);
 }
@@ -98,12 +94,9 @@ function connect() {
     stompClient.connect({}, function (frame) {
         console.log('Connected: ' + frame);
 
-        // Calls the method playerpos from PlayerController.java and
-        // displays the return statement under canvas
-
 
         //TODO: example of somthing to do with ajax
-        //sendInitRequest();
+
 
 
         stompClient.subscribe('/topic/event', function (message) {
@@ -125,7 +118,6 @@ function connect() {
 function updateKeys(e){
 
     let currentKey = e.key;
-    console.log(currentKey);
     switch (currentKey){
 
         case "a":
@@ -164,6 +156,7 @@ function updateKeys(e){
     }
 
 } // end updateKeys
+
 function draw(){
 
     //move the image
@@ -173,9 +166,10 @@ function draw(){
     dy = 0;
 
     //check for boundaries
+    drawEntity(playerSprite, x, y);
     boundaries();
     createScene();
-    updatePlayer(container);
+
 
 
     //updating displayed coordinates
@@ -186,16 +180,16 @@ function draw(){
 
 //checks to see if the player is against a wall
 function boundaries(){
-    if (x >= boardWidth){
+    if (x >= (boardWidth * TILE_SIZE)){
         //subtracts offset of character sprite
-        x = boardWidth-TILE_SIZE;
+        x = (boardWidth * TILE_SIZE)-TILE_SIZE;
     }
     if (x < 0){
         x = 0;
     }
-    if (y >= boardHeight){
+    if (y >= (boardHeight*TILE_SIZE)){
         //subtracts offset of character sprite
-        y = boardHeight-TILE_SIZE;
+        y = (boardHeight*TILE_SIZE)-TILE_SIZE;
     } // end if
     if (y < 0){
         y = 0;
@@ -219,7 +213,6 @@ function setupPixi() {
 }
 function createScene(){
     let pos = 0;
-    console.log(boardMap.length);
 
     for(let iy = 0; iy < boardHeight; iy++){
         for(let ix = 0; ix < boardWidth; ix++) {
@@ -235,33 +228,19 @@ function createScene(){
         }
     }
 
-    updatePlayer(container);
+    drawEntity(playerSprite, x, y);
 }
 
-function updatePlayer(appContainer){
-    const pixiPSprite = PIXI.Texture.from(playerSprite);
-    const userP = new PIXI.Sprite(pixiPSprite);
-    userP.height = 60;
-    userP.width = 60;
-    userP.x = x;
-    userP.y = y;
-    appContainer.addChild(userP);
+function drawEntity(entitySprite, xCoord, yCoord){
+
+    const pixiPSprite = PIXI.Texture.from(entitySprite);
+    const entityTile = PIXI.Sprite.from(pixiPSprite);
+    entityTile.height = 60;
+    entityTile.width = 60;
+    entityTile.x = xCoord;
+    entityTile.y = yCoord;
+    container.addChild(entityTile);
 }
-
-
-
-function getCharTile(tileType){
-    return grassTile;
-    // TODO: load known textures in to a map, access map here
-    switch(tileType){
-        case 'floor': return grassTile;
-        default: return deadTile;
-    }
-}
-
-
-
-
 
 
 // ***** The following methods display 'debugging'    *****
@@ -350,7 +329,7 @@ function eventReaction(message) {
     }
     //if it was not any thing listed above then the client is unsure what to do with the broadcasted information
     else{
-        console.log("Server gave me information that I cannot use.")
+        console.log("~~~~~Unusable information~~~~~")
     }
 
 }
@@ -360,6 +339,7 @@ function eventReaction(message) {
 
 
 
+//returns the tile from a map of tiles using the value of another map
 function getTile(character){
     switch(character){
         case "-":
@@ -373,3 +353,19 @@ function getTile(character){
 
     }
 }
+
+
+
+//TODO: look into coloring console.log information
+var styles = [
+    'background: linear-gradient(#D33106, #571402)'
+    , 'border: 1px solid #3E0E02'
+    , 'color: white'
+    , 'display: block'
+    , 'text-shadow: 0 1px 0 rgba(0, 0, 0, 0.3)'
+    , 'box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4) inset, 0 5px 3px -5px rgba(0, 0, 0, 0.5), 0 -13px 5px -10px rgba(255, 255, 255, 0.4) inset'
+    , 'line-height: 40px'
+    , 'text-align: center'
+    , 'font-weight: bold'
+].join(';');
+
