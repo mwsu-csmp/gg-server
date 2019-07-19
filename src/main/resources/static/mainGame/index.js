@@ -15,6 +15,8 @@ let tileAlias;
 let boardMap;
 let asdf;
 
+let column;
+let row;
 
 TILE_SIZE = 60;
 let x = 120;
@@ -42,8 +44,7 @@ function init(){ // called on startup
 
     document.onkeydown = updateKeys;//gets key presses
     connect();
-    //calls the method draw continuously every 300 ms
-    //drawCharMap('outside');  // TODO: get board name from entity creation event for player avatar
+      // TODO: get board name from entity creation event for player avatar
     asdf = new Map();
     asdf.set("-", "grass1");
     asdf.set("#", "deadGrass");
@@ -168,7 +169,7 @@ function draw(){
     //check for boundaries
     drawEntity(playerSprite, x, y);
     boundaries();
-    createScene();
+    //createScene();
 
 
 
@@ -330,7 +331,6 @@ function eventReaction(message) {
 
 
 
-
 //returns the tile from a map of tiles using the value of another map
 function getTile(character){
     switch(character){
@@ -345,7 +345,6 @@ function getTile(character){
 
     }
 }
-
 
 
 //TODO: look into coloring console.log information
