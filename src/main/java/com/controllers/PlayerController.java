@@ -23,7 +23,7 @@ public class PlayerController {
     @Autowired
     private GameMapping game;
 
-    Logger log = LoggerFactory.getLogger(this.getClass());
+    Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public PlayerController() {
         var gb = new GsonBuilder();
@@ -36,6 +36,8 @@ public class PlayerController {
             Principal user
     ){
         issueCommandEventFromJson(game, user.getName(), data);
+
+
     }
 
 }

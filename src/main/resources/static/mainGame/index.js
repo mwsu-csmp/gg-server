@@ -109,7 +109,7 @@ function connect() {
             let pmessage = JSON.parse(message.body);
             //this would log the body in case you need to see it
             //console.log(pmessage);
-            eventReaction(JSON.parse(pmessage));
+            eventReaction(pmessage);
         });
     });
 }
@@ -297,15 +297,7 @@ function eventReaction(message) {
         //TODO: the if below is for the ability to know if it was thier own player or not
         if(true){
 
-            switch(message.body.command){
-                case 'MOVE':
-                    break;
-                case "INTERACTION":
-                    break;
-                default:
 
-
-            }
 
 
         }
