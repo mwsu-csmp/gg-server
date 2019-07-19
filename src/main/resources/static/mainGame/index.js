@@ -1,4 +1,6 @@
 let playerSprite;
+let GuideSprite;
+let OtherPlayerSprite;
 let grassTile;
 let deadTile;
 let waterTile;
@@ -23,12 +25,20 @@ let currentKey;
 let app;
 let container;
 
+let tileA2;
+let drawing;
+let con;
+//let username= document.getElementById("username");
 let boardInfoURL = '/board';
 
 function init(){ // called on startup
 
+    let username = $($.find('#username')[0]).text();
     //getting images TODO: search for pixi texture loading
     playerSprite = document.getElementById("PlayerSprite");
+    OtherPlayerSprite = document.getElementById("OtherPlayerSprite");
+    GuideSprite = document.getElementById("GuideSprite");
+
     grassTile = document.getElementById("grass");
     deadTile = document.getElementById("grassDead");
     waterTile = document.getElementById("water");
@@ -51,8 +61,8 @@ function init(){ // called on startup
     tileAlias.set("deadGrass",deadTile);
     tileAlias.set("door",grassTile );
 
-    boardHeight = 21//parsedJson.height;
-    boardWidth = 17//parsedJson.width;
+    boardHeight = 21;//parsedJson.height;
+    boardWidth = 17;//parsedJson.width;
     charAlias = asdf;
     boardMap =
         "########@########" +
@@ -96,11 +106,17 @@ function connect() {
         //sendInitRequest();
 
 
-        stompClient.subscribe('/topic/event', function (event) {
+        stompClient.subscribe('/topic/event', function (message) {
            //
             //
             // console.log("pass in check: "+event.body.toString());
-            eventReaction(event.body.toString());
+
+          //  console.log("yeeeeeeeeeeeet"+username);
+
+            let pmessage = JSON.parse(message.body);
+            //this would log the body in case you need to see it
+            //console.log(pmessage);
+            eventReaction(JSON.parse(pmessage));
         });
     });
 }
@@ -142,7 +158,7 @@ function updateKeys(e){
 
         case "e":
         case "E":
-            sendCommand("INTERACTION", "E")
+            sendCommand("INTERACTION", "E");
             currentKey=null;
             break;
     }
@@ -157,10 +173,9 @@ function draw(){
     dy = 0;
 
     //check for boundaries
-    updatePlayer(container);
     boundaries();
     createScene();
-
+    updatePlayer(container);
 
 
     //updating displayed coordinates
@@ -171,16 +186,16 @@ function draw(){
 
 //checks to see if the player is against a wall
 function boundaries(){
-    if (x >= (boardWidth * TILE_SIZE)){
+    if (x >= boardWidth){
         //subtracts offset of character sprite
-        x = (boardWidth * TILE_SIZE)-TILE_SIZE;
+        x = boardWidth-TILE_SIZE;
     }
     if (x < 0){
         x = 0;
     }
-    if (y >= (boardHeight*TILE_SIZE)){
+    if (y >= boardHeight){
         //subtracts offset of character sprite
-        y = (boardHeight*TILE_SIZE)-TILE_SIZE;
+        y = boardHeight-TILE_SIZE;
     } // end if
     if (y < 0){
         y = 0;
@@ -294,36 +309,56 @@ function showTiles(tiletext) {
 }
 
 
-function eventReaction(event) {
-    //console.log("EVENTLOGGER:"+event);
-    if(event.toString().includes("MOVE")){
-        changeLocation(event);
-    }
-    else if(event.toString().includes("INTERACTION")){
+function eventReaction(message) {
+
+
+    //a command event is a player command
+    if(message.type.includes("CommandEvent")){
+        //TODO: need to add an ability to distiguish if its for the main player or a different player
+        //TODO: the if below is for the ability to know if it was thier own player or not
+        if(true){
+
+            switch(message.body.command){
+                case 'MOVE':
+                    break;
+                case "INTERACTION":
+                    break;
+                default:
+
+
+            }
+
+
+        }
+        //this is for non main player events
+        else{
+
+
+
+
+        }
+
+
 
     }
+    //this is essentally used by guide. non player movments have occured.
+    else if(message.type.includes("EntityMovedEvent")){
+
+
+
+
+    }
+    //if it was not any thing listed above then the client is unsure what to do with the broadcasted information
     else{
         console.log("Server gave me information that I cannot use.")
     }
 
 }
 
-function changeLocation(event) {
-    //TODO: this is temp it will need to change to impliment row and collom not directly adding 40 to x and y
-    if(event.toString().includes("NORTH")){
-        y-=TILE_SIZE;
-    }
-    else if(event.toString().includes("WEST")){
-        x-=TILE_SIZE;
-    }
-    else if(event.toString().includes("EAST")){
-        x+=TILE_SIZE;
-    }
-    else{
-        y+=TILE_SIZE;
-    }
 
-}
+
+
+
 
 function getTile(character){
     switch(character){
