@@ -6,7 +6,7 @@ import edu.missouriwestern.csmp.gg.base.events.CommandEvent;
 
 import java.util.Map;
 
-public class Chest extends Entity implements Container {
+public class Chest extends Entity implements EventListener, Container {
 
     private boolean isOpen = false;
 
