@@ -58,35 +58,14 @@ function init(){ // called on startup
     tileAlias.set("deadGrass",deadTile);
     tileAlias.set("door",waterTile );
 
-    boardHeight = 21;//parsedJson.height;
-    boardWidth = 17;//parsedJson.width;
+    //boardHeight = 21;//parsedJson.height;
+    //boardWidth = 17;//parsedJson.width;
     charAlias = asdf;
-    boardMap =
-        "########@########" +
-        "########-########" +
-        "########-########" +
-        "-##----------###-" +
-        "-----------------" +
-        "-----------------" +
-        "-----------------" +
-        "-----------------" +
-        "#---------------#" +
-        "#---------------#" +
-        "#---------------#" +
-        "#---------------#" +
-        "#---------------#" +
-        "#---------------#" +
-        "#---------------#" +
-        "#---------------#" +
-        "#---------------#" +
-        "#---------------#" +
-        "#---------------#" +
-        "#-------*-------#" +
-        "#################";
 
 
-    setupPixi();
-    createScene();
+    getInfo('outside');//gets board info
+
+
     setInterval(draw, 300);
 }
 function connect() {
@@ -217,8 +196,10 @@ function createScene(){
 
     for(let iy = 0; iy < boardHeight; iy++){
         for(let ix = 0; ix < boardWidth; ix++) {
+            if(boardMap.charAt(pos) == "\n"){
+                pos++;
+                continue;}
             const textureGrass = PIXI.Texture.from(getTile(boardMap.charAt(pos)));
-
             const tile = new PIXI.Sprite(textureGrass);
             tile.height = TILE_SIZE;
             tile.width = TILE_SIZE;
@@ -328,9 +309,6 @@ function eventReaction(message) {
 }
 
 
-
-
-
 //returns the tile from a map of tiles using the value of another map
 function getTile(character){
     switch(character){
@@ -343,11 +321,24 @@ function getTile(character){
         case "*":
             return tileAlias.get(charAlias.get("*"));
 
+
     }
 }
 
+function getInfo(boardName){
+    ($.getJSON(boardInfoURL+'/'+boardName, function(board){
+
+        boardWidth = board.width;
+        boardHeight = board.height;
+        boardMap = board.tilemap;
+    }));
+    setupPixi();
+    createScene();
+
+}
 
 //TODO: look into coloring console.log information
+/*
 var styles = [
     'background: linear-gradient(#D33106, #571402)'
     , 'border: 1px solid #3E0E02'
@@ -360,3 +351,4 @@ var styles = [
     , 'font-weight: bold'
 ].join(';');
 
+*/
