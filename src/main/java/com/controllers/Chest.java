@@ -8,9 +8,8 @@ import java.util.Map;
 
 public class Chest extends Entity implements Container {
 
-//    protected TestEntity(Game game, Map<String, String> properties) {
-//        super(game, properties);
-//    }
+    private boolean isOpen = false;
+
     public Chest(Game game, Container startingLocation) {
         super(game, Map.of("sprites", "chest-normal",
                 "character", "▣",
@@ -24,23 +23,25 @@ public class Chest extends Entity implements Container {
         if (event instanceof CommandEvent) { // see if someone wants you to talk to them
             var command = (CommandEvent) event;
             if (command.getCommandName().equals("INTERACT")) {
-                var player = getGame().getPlayer(command.getProperty("player"));
-                if (player instanceof StompClient) {
-                    var avatar = ((StompClient) player).getAvatar();
-                    var avatarLocation = getGame().getEntityLocation(avatar);
-                    if(avatarLocation instanceof Tile) {
-                        var tile = (Tile)avatarLocation;
-                        var board = tile.getBoard();
-                        var target = board.getAdjacentTile(tile, Direction.valueOf(command.getProperty("parameter")));
-                        if(target == getGame().getEntityLocation(this)) {
-                            getEntities().forEach(avatar::addEntity);
+                if (this.isOpen == false) {
+                    var player = getGame().getPlayer(command.getProperty("player"));
+                    if (player instanceof StompClient) {
+                        var avatar = ((StompClient) player).getAvatar();
+                        var avatarLocation = getGame().getEntityLocation(avatar);
+                        if (avatarLocation instanceof Tile) {
+                            var tile = (Tile) avatarLocation;
+                            var board = tile.getBoard();
+                            var target = board.getAdjacentTile(tile, Direction.valueOf(command.getProperty("parameter")));
+                            if (target == getGame().getEntityLocation(this)) {
+                                getEntities().forEach(avatar::addEntity);
+                                this.isOpen = true;
+                            }
                         }
                     }
                 }
             }
         }
     }
-
 
     @Override
     public String getType() {
