@@ -4,9 +4,8 @@ let OtherPlayerSprite;
 let grassTile;
 let deadTile;
 let waterTile;
+let missingTexture;
 
-CANV_HEIGHT = 300;
-CANV_WIDTH = 300;
 
 let boardWidth;
 let boardHeight;
@@ -36,7 +35,7 @@ function init(){ // called on startup
     playerSprite = document.getElementById("PlayerSprite");
     OtherPlayerSprite = document.getElementById("OtherPlayerSprite");
     GuideSprite = document.getElementById("GuideSprite");
-
+    missingTexture = document.getElementById("noTexture");
     grassTile = document.getElementById("grass");
     deadTile = document.getElementById("grassDead");
     waterTile = document.getElementById("water");
@@ -50,6 +49,7 @@ function init(){ // called on startup
     asdf.set("#", "deadGrass");
     asdf.set("@", "door");
     asdf.set("*", "door");
+    asdf.set("%", "guide");
 
 
 
@@ -57,16 +57,16 @@ function init(){ // called on startup
     tileAlias.set("grass1",grassTile);
     tileAlias.set("deadGrass",deadTile);
     tileAlias.set("door",waterTile );
+    tileAlias.set("guide", GuideSprite);
 
-    //boardHeight = 21;//parsedJson.height;
-    //boardWidth = 17;//parsedJson.width;
     charAlias = asdf;
 
 
-    getInfo('outside');//gets board info
 
 
+    getInfo('aggensteinFoyer');//gets board info
     setInterval(draw, 300);
+
 }
 function connect() {
     var socket = new SockJS('/WebSocketConfig');//connection link
@@ -80,16 +80,7 @@ function connect() {
 
 
         stompClient.subscribe('/topic/event', function (message) {
-           //
-            //
-            // console.log("pass in check: "+event.body.toString());
-
-          //  console.log("yeeeeeeeeeeeet"+username);
-
-            let pmessage = JSON.parse(message.body);
-            //this would log the body in case you need to see it
-            //console.log(pmessage);
-            eventReaction(pmessage);
+            eventReaction(JSON.parse(message.body));
         });
     });
 }
@@ -148,7 +139,6 @@ function draw(){
     //check for boundaries
     drawEntity(playerSprite, x, y);
     boundaries();
-    //createScene();
 
 
 
@@ -178,7 +168,7 @@ function boundaries(){
 
 function setupPixi() {
     app = new PIXI.Application({
-        width: 1020, height: 1260,
+        width: boardWidth * TILE_SIZE, height: boardHeight * TILE_SIZE,
         backgroundColor: 0x9999bb
         //resolution: window.devicePixelRatio || 1
     });
@@ -193,20 +183,26 @@ function setupPixi() {
 }
 function createScene(){
     let pos = 0;
-
+    console.log("at scene" + boardWidth + "," + boardHeight);
     for(let iy = 0; iy < boardHeight; iy++){
         for(let ix = 0; ix < boardWidth; ix++) {
-            if(boardMap.charAt(pos) == "\n"){
-                pos++;
-                continue;}
-            const textureGrass = PIXI.Texture.from(getTile(boardMap.charAt(pos)));
-            const tile = new PIXI.Sprite(textureGrass);
-            tile.height = TILE_SIZE;
-            tile.width = TILE_SIZE;
-            tile.x = ix * TILE_SIZE;
-            tile.y = iy * TILE_SIZE;
-            container.addChild(tile);
-            pos++;
+            switch(boardMap.charAt(pos)){
+                case "\n":
+                    pos++;
+                    break;
+                case "*":
+                    x = ix * TILE_SIZE;
+                    y = iy * TILE_SIZE;
+                default:
+                    const textureGrass = PIXI.Texture.from(getTile(boardMap.charAt(pos)));
+                    const tile = new PIXI.Sprite(textureGrass);
+                    tile.height = TILE_SIZE;
+                    tile.width = TILE_SIZE;
+                    tile.x = ix * TILE_SIZE;
+                    tile.y = iy * TILE_SIZE;
+                    container.addChild(tile);
+                    pos++;
+            }
         }
     }
 
@@ -270,45 +266,21 @@ function showTiles(tiletext) {
 }
 
 
-function eventReaction(message) {
+function eventReaction(event) {
 
-
-    //a command event is a player command
-    if(message.type.includes("CommandEvent")){
+    switch (event.type) {
         //TODO: need to add an ability to distiguish if its for the main player or a different player
-        //TODO: the if below is for the ability to know if it was thier own player or not
-        if(true){
-
-
-
-
-        }
-        //this is for non main player events
-        else{
-
-
-
-
-        }
-
-
+        //TODO: the if below is for the ability to know if it was their own player or not
+        case "CommandEvent":
+            break;
+        case "EntityMovedEvent":
+            drawEntity(missingTexture, event.column * TILE_SIZE, event.row * TILE_SIZE);
+            break;
+        default:
+            console.log("unregistered Event");
 
     }
-    //this is essentally used by guide. non player movments have occured.
-    else if(message.type.includes("EntityMovedEvent")){
-
-
-
-
-    }
-    //if it was not any thing listed above then the client is unsure what to do with the broadcasted information
-    else{
-        console.log("~~~~~Unusable information~~~~~")
-    }
-
 }
-
-
 //returns the tile from a map of tiles using the value of another map
 function getTile(character){
     switch(character){
@@ -320,20 +292,26 @@ function getTile(character){
             return tileAlias.get(charAlias.get("@"));
         case "*":
             return tileAlias.get(charAlias.get("*"));
+        case "%":
+            return tileAlias.get(charAlias.get("%"));
+
+        default: return missingTexture;
 
 
     }
 }
 
 function getInfo(boardName){
-    ($.getJSON(boardInfoURL+'/'+boardName, function(board){
+    $.getJSON(boardInfoURL+'/'+boardName, function(board){
 
-        boardWidth = board.width;
+        boardWidth = board.width+1;
         boardHeight = board.height;
         boardMap = board.tilemap;
-    }));
-    setupPixi();
-    createScene();
+        console.log(boardWidth + "," + boardHeight);
+        setupPixi();
+        createScene();
+    });
+
 
 }
 
