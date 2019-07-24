@@ -17,6 +17,8 @@ public class Guide extends Entity implements EventListener, Runnable {
     private final String[] messages = {"Welcome to GG-Project!",
             "Find the key in order to reach the Spellcraft Area!",
             "Start by searching around for Items!"};
+
+
     @Autowired
     public Guide(@Qualifier("game") Game game) {
         super(game, Map.of("sprites", "guide",
@@ -59,7 +61,7 @@ public class Guide extends Entity implements EventListener, Runnable {
     @Override
     public void run() {
         while(true) { // walk randomly indefinitely
-            try { Thread.sleep(4000); } catch(Exception e) {}
+            try { Thread.sleep(40000); } catch(Exception e) {}
             logger.info("guide walking around");
             var direction = Direction.values()[(int)(Math.random()*4)];
             if(!(getGame().getEntityLocation(this) instanceof  Tile))

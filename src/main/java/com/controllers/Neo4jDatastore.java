@@ -92,7 +92,7 @@ class Neo4jDatastore implements DataStore {
     @Override
     public ArrayList<Integer> search(Map map){
         ArrayList<Integer> list = new ArrayList<>();
-        StatementResult statementResult = null;
+ /*       StatementResult statementResult = null;
         try {
             statementResult = session.run(
                     String.format("MATCH (n { %s })\nReturn n", map.toString())
@@ -106,7 +106,7 @@ class Neo4jDatastore implements DataStore {
                     list.add(id.asInt());
                 }
             }
-        }
+        }*/
         return list;
     }
 

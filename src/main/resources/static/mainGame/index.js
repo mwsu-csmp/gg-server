@@ -6,6 +6,8 @@ let deadTile;
 let waterTile;
 let missingTexture;
 
+let lastMovement="";
+let username;
 
 let boardWidth;
 let boardHeight;
@@ -30,7 +32,6 @@ let boardInfoURL = '/board';
 
 function init(){ // called on startup
 
-    let username = $($.find('#username')[0]).text();
     //getting images TODO: search for pixi texture loading
     playerSprite = document.getElementById("PlayerSprite");
     OtherPlayerSprite = document.getElementById("OtherPlayerSprite");
@@ -43,6 +44,7 @@ function init(){ // called on startup
 
     document.onkeydown = updateKeys;//gets key presses
     connect();
+
       // TODO: get board name from entity creation event for player avatar
     asdf = new Map();
     asdf.set("-", "grass1");
@@ -50,6 +52,7 @@ function init(){ // called on startup
     asdf.set("@", "door");
     asdf.set("*", "door");
     asdf.set("%", "guide");
+
 
 
 
@@ -63,7 +66,7 @@ function init(){ // called on startup
 
 
 
-
+    whoAmI();
     getInfo('aggensteinFoyer');//gets board info
     setInterval(draw, 300);
 
@@ -74,16 +77,38 @@ function connect() {
     stompClient.connect({}, function (frame) {
         console.log('Connected: ' + frame);
 
-
-        //TODO: example of somthing to do with ajax
-
-
-
         stompClient.subscribe('/topic/event', function (message) {
             eventReaction(JSON.parse(message.body));
         });
     });
 }
+
+//this is to get the name of the client from the htlm through ajax
+function whoAmI(){
+    let temp="    ";
+    let acc=0;
+
+    username= $($.find('h1')[0]).html();
+    console.log("WHO AMMMM I: "+ username);
+
+    //this is an attempt to try and get the client to find out its entity number
+    whoAmIHelper(3,username);
+
+
+}
+
+function whoAmIHelper(int, username) {
+    $.getJSON("/../entity/"+int,function (entity) {
+        console.log(entity.properties);
+    });
+}
+
+
+
+
+
+
+
 
 // updates currentKey with the latest key pressed.
 function updateKeys(e){
@@ -96,6 +121,7 @@ function updateKeys(e){
         case "ArrowLeft":
             sendCommand("MOVE", "WEST");
             currentKey = null;
+            lastMovement="WEST";
             break;
 
         case "d":
@@ -103,6 +129,7 @@ function updateKeys(e){
         case "ArrowRight":
             sendCommand("MOVE", "EAST");
             currentKey = null;
+            lastMovement="EAST";
             break;
 
         case "w":
@@ -110,6 +137,7 @@ function updateKeys(e){
         case "ArrowUp":
             sendCommand("MOVE", "NORTH");
             currentKey = null;
+            lastMovement="NORTH";
             break;
 
         case "s":
@@ -117,11 +145,13 @@ function updateKeys(e){
         case "ArrowDown":
             sendCommand("MOVE", "SOUTH");
             currentKey = null;
+            lastMovement="South";
             break;
 
         case "e":
         case "E":
-            sendCommand("INTERACTION", "E");
+            sendCommand("INTERACTION", lastMovement.toString());
+            // I have to string above just to ensure that the send is all string. just in case.
             currentKey=null;
             break;
     }
@@ -314,6 +344,9 @@ function getInfo(boardName){
 
 
 }
+
+
+
 
 //TODO: look into coloring console.log information
 /*

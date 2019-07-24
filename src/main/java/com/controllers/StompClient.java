@@ -12,6 +12,8 @@ public class StompClient extends Player {
     public StompClient(String id, Game game) {
         super(id, game);
         avatar = new PlayerAvatar(game, this);
+        game.registerListener(avatar);
+        // TODO: place player avatar where it needs to go
     }
 
     public PlayerAvatar getAvatar() { return avatar; }
