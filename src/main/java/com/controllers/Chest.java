@@ -1,6 +1,5 @@
 package com.controllers;
 
-import com.player.StompClient;
 import edu.missouriwestern.csmp.gg.base.*;
 import edu.missouriwestern.csmp.gg.base.events.CommandEvent;
 

@@ -3,7 +3,6 @@ package com.controllers;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import edu.missouriwestern.csmp.gg.base.Container;
-import edu.missouriwestern.csmp.gg.base.Game;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +24,7 @@ public class GameInfoController {
     private Gson gson;
 
     @Autowired
-    private Game game;
+    private GameMapping game;
 
     public GameInfoController() {
         var builder = new GsonBuilder();
@@ -76,7 +75,7 @@ public class GameInfoController {
         if(board != null) {
             var tile = board.getTile(column, row);
             if(tile != null) { // add all entity ID's to the list of ID's
-                tile.getEntities().forEach(entity ->  contents.add(entity.getID()));
+                tile.getEntities().forEach(entity -> contents.add(entity.getID()));
             }
         }
         return gson.toJson(contents);
@@ -107,9 +106,20 @@ public class GameInfoController {
         return gson.toJson(contents);
     }
 
+    /** returns description of player's avatar entity */
+    @GetMapping("/player-avatar/{playerId}")
+    @ResponseBody
+    public String getPlayerAvatar(@PathVariable String playerId) {
+        var player = game.getPlayer(playerId);
+        if(player != null && player instanceof StompClient) {
+            return ((StompClient)player).getAvatar().toString();
+        }
+        return "ERROR";
+    }
+
 
     @GetMapping("/maingame/client")
-    public String viewExercise(Map<String, Object> model,
+    public String loadClientGUI(Map<String, Object> model,
                                HttpServletRequest request,
                                HttpServletResponse response) {
         var username = request.getUserPrincipal().getName();

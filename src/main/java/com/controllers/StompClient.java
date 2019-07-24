@@ -1,4 +1,4 @@
-package com.player;
+package com.controllers;
 
 import com.controllers.PlayerAvatar;
 import edu.missouriwestern.csmp.gg.base.Event;

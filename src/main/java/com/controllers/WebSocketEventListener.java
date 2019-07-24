@@ -1,6 +1,5 @@
 package com.controllers;
 
-import com.player.StompClient;
 import edu.missouriwestern.csmp.gg.base.Game;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

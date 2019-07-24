@@ -33,8 +33,8 @@ public class Guide extends Entity implements EventListener, Runnable {
             var command = (CommandEvent)event;
             if(command.getCommandName().equals("INTERACT")) {
                 var player = getGame().getPlayer(command.getProperty("player"));
-                if(player instanceof com.player.StompClient) { // TODO: this cast sucks, shouldn't be tied to client, rethink approach
-                    var avatar = ((com.player.StompClient)player).getAvatar();
+                if(player instanceof StompClient) { // TODO: this cast sucks, shouldn't be tied to client, rethink approach
+                    var avatar = ((StompClient)player).getAvatar();
                     var avatarLocation = getGame().getEntityLocation(avatar);
                     if(avatarLocation instanceof Tile) {
                         var tile = (Tile)avatarLocation;
