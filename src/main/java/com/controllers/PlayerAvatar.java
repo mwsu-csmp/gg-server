@@ -43,7 +43,6 @@ public class    PlayerAvatar extends Entity implements EventListener, Container 
                             if(destination.hasProperty("impassable") &&
                                     !destination.getProperty("impassable").equals("false"))
                                 break;  // can't walk on to an impassable tile
-
                             // determine if we walked through a door
                             if(destination.hasProperty("portal-destination-board")) {
                                 destination = getGame()  // update destination to new board

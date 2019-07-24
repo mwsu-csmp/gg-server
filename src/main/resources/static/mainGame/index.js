@@ -8,6 +8,8 @@ let missingTexture;
 
 let lastMovement="";
 let username;
+let myUserEnityId;
+let helperTemp;
 
 let boardWidth;
 let boardHeight;
@@ -69,6 +71,7 @@ function init(){ // called on startup
     getInfo('aggensteinFoyer');//gets board info
     setInterval(draw, 300);
 
+
 }
 function connect() {
     var socket = new SockJS('/WebSocketConfig');//connection link
@@ -76,6 +79,8 @@ function connect() {
     stompClient.connect({}, function (frame) {
         console.log('Connected: ' + frame);
 
+        //TODO: find a better place for whoAMI but this does garenttee we know who we are.
+        whoAmI();
         stompClient.subscribe('/topic/event', function (message) {
             eventReaction(JSON.parse(message.body));
         });
@@ -84,28 +89,25 @@ function connect() {
 
 //this is to get the name of the client from the htlm through ajax
 function whoAmI(){
-    let temp="    ";
-    let acc=0;
+
 
     username= $($.find('h1')[0]).html();
     console.log("WHO AMMMM I: "+ username);
 
     //this is an attempt to try and get the client to find out its entity number
-    whoAmIHelper(3,username);
+    //whoAmIHelper(3,username);
+    //player-avatar/user
+
+    whoAmIHelper(username);
 
 
 }
 
-function whoAmIHelper(int, username) {
-    $.getJSON("/../entity/"+int,function (entity) {
-        console.log(entity.properties);
+function whoAmIHelper(userr) {
+    $.getJSON("../player-avatar/"+userr,function (entity) {
+        myUserEnityId= entity.id;
     });
 }
-
-
-
-
-
 
 
 
@@ -300,16 +302,55 @@ function eventReaction(event) {
     switch (event.type) {
         //TODO: need to add an ability to distiguish if its for the main player or a different player
         //TODO: the if below is for the ability to know if it was their own player or not
-        case "CommandEvent":
-            break;
         case "EntityMovedEvent":
-            drawEntity(missingTexture, event.column * TILE_SIZE, event.row * TILE_SIZE);
+            console.log(event);
+            let temp= eventReactionHelper(event.properties.entity);
+
+            switch (temp) {
+                case "player":
+
+                    if(event.properties.entity==myUserEnityId){
+                        console.log("I moved");
+                    }
+                    else{
+                        console.log("someone else moved");
+                    }
+
+                    break;
+                case "guide":
+                    console.log("the guide moved");
+                    break;
+                default:
+                    console.log("Client does not know this enity")
+            }
+
+            //drawEntity(missingTexture, event.column * TILE_SIZE, event.row * TILE_SIZE);
             break;
         default:
             console.log("unregistered Event");
 
     }
 }
+
+function eventReactionHelper(entityNum) {
+    $.getJSON("../entity/"+entityNum,function (entity) {
+        if(entity.properties.player!=undefined){
+            helperTemp= "player";
+        }
+        else if(entity.properties.sprites=="guide"){
+            helperTemp= "guide";
+        }
+        else{
+            helperTemp= "unknown";
+        }
+
+    });
+    return helperTemp;
+
+
+}
+
+
 //returns the tile from a map of tiles using the value of another map
 function getTile(character){
     switch(character){
