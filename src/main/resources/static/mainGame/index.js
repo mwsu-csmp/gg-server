@@ -20,11 +20,10 @@ let column;
 let row;
 
 TILE_SIZE = 60;
-let x = 120;
-let y = 120;
+let x;
+let y;
 let dx = 0;
 let dy = 0;
-let currentKey;
 let app;
 let container;
 
@@ -66,7 +65,7 @@ function init(){ // called on startup
 
 
 
-    whoAmI();
+
     getInfo('aggensteinFoyer');//gets board info
     setInterval(draw, 300);
 
@@ -198,7 +197,7 @@ function boundaries(){
 
 function setupPixi() {
     app = new PIXI.Application({
-        width: boardWidth * TILE_SIZE, height: boardHeight * TILE_SIZE,
+        width: (boardWidth-1) * TILE_SIZE, height: boardHeight * TILE_SIZE,
         backgroundColor: 0x9999bb
         //resolution: window.devicePixelRatio || 1
     });
