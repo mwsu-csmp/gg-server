@@ -10,8 +10,6 @@ let lastMovement="";
 let username;
 let myUserEnityId;
 let helperTemp;//for eventReactionHelper
-let helperTemp1;//for get row
-let helperTemp2;//for get column
 
 let boardWidth;
 let boardHeight;
@@ -54,7 +52,7 @@ function init(){ // called on startup
     asdf.set("#", "deadGrass");
     asdf.set("@", "door");
     asdf.set("*", "door");
-    asdf.set("%", "guide");
+    asdf.set("%", "grass1");
 
 
 
@@ -69,8 +67,9 @@ function init(){ // called on startup
 
 
 
-
-    getInfo('aggensteinFoyer');//gets board info
+    //ajax info pulling
+    getUsername();
+    getInfo('foyer');//gets board info
     setInterval(draw, 300);
 
 
@@ -81,8 +80,6 @@ function connect() {
     stompClient.connect({}, function (frame) {
         console.log('Connected: ' + frame);
 
-        //TODO: find a better place for whoAMI but this does garenttee we know who we are.
-        whoAmI();
         stompClient.subscribe('/topic/event', function (message) {
             eventReaction(JSON.parse(message.body));
         });
@@ -90,23 +87,16 @@ function connect() {
 }
 
 //this is to get the name of the client from the htlm through ajax
-function whoAmI(){
-
-
+function getUsername(){
     username= $($.find('h1')[0]).html();
-    console.log("WHO AMMMM I: "+ username);
-
-    //this is an attempt to try and get the client to find out its entity number
-    //whoAmIHelper(3,username);
-    //player-avatar/user
-
-    whoAmIHelper(username);
+    console.log("Username: "+ username);
+    getUsername(username);
 
 
 }
 
-function whoAmIHelper(userr) {
-    $.getJSON("../player-avatar/"+userr,function (entity) {
+function getUsername(username) {
+    $.getJSON("../player-avatar/"+username,function (entity) {
         myUserEnityId= entity.id;
     });
 }
@@ -216,7 +206,6 @@ function setupPixi() {
 }
 function createScene(){
     let pos = 0;
-    console.log("at scene" + boardWidth + "," + boardHeight);
     for(let iy = 0; iy < boardHeight; iy++){
         for(let ix = 0; ix < boardWidth; ix++) {
             switch(boardMap.charAt(pos)){
@@ -293,11 +282,6 @@ function showKeyPressed(keyPressed){
 
 
 
-function showTiles(tiletext) {
-    document.getElementById('tileLocation').innerHTML = "Tile: " + tiletext;
-    console.log(tiletext);
-}
-
 
 function eventReaction(event) {
 
@@ -308,16 +292,16 @@ function eventReaction(event) {
 
             $.getJSON("../entity/"+event.properties.entity,function (entity) {
 
-                //console.log(event);
+
 
                 let enityUserName;
+                console.log("\n\n~~~ ENTITY DESCRIPTION ~~~");
                 console.log(entity);
 
 
                 if (entity.properties.player!=undefined){
                     enityUserName=entity.properties.player;
                     if (enityUserName==username){
-                        console.log("I moved!");
                         createScene();
                         drawEntity(playerSprite,entity.column*TILE_SIZE,entity.row*TILE_SIZE);
                     }
@@ -392,22 +376,3 @@ function getInfo(boardName){
 
 
 }
-
-
-
-
-//TODO: look into coloring console.log information
-/*
-var styles = [
-    'background: linear-gradient(#D33106, #571402)'
-    , 'border: 1px solid #3E0E02'
-    , 'color: white'
-    , 'display: block'
-    , 'text-shadow: 0 1px 0 rgba(0, 0, 0, 0.3)'
-    , 'box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4) inset, 0 5px 3px -5px rgba(0, 0, 0, 0.5), 0 -13px 5px -10px rgba(255, 255, 255, 0.4) inset'
-    , 'line-height: 40px'
-    , 'text-align: center'
-    , 'font-weight: bold'
-].join(';');
-
-*/

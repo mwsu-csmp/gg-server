@@ -33,8 +33,8 @@
     <bean id="outside-map" class="com.controllers.GameMapping" factory-method="loadMap">
         <constructor-arg value="outside-map.txt"/>
     </bean>
-    <bean id="Foyer-map" class="com.controllers.GameMapping" factory-method="loadMap">
-        <constructor-arg value="Foyer-map.txt"/>
+    <bean id="foyer-map" class="com.controllers.GameMapping" factory-method="loadMap">
+        <constructor-arg value="foyer-map.txt"/>
     </bean>
     <bean id="aggensteinFoyer-map" class="com.controllers.GameMapping" factory-method="loadMap">
         <constructor-arg value="aggensteinFoyer-map.txt"/>
@@ -75,7 +75,7 @@
                         </bean>
                     </key>
                     <map>
-                        <entry key="portal-destination-board" value="Foyer"/>
+                        <entry key="portal-destination-board" value="foyer"/>
                     </map>
                 </entry>
             </map>
@@ -83,11 +83,11 @@
     </bean>
 
 
-    <bean id="Foyer" class="edu.missouriwestern.csmp.gg.base.Board">
+    <bean id="foyer" class="edu.missouriwestern.csmp.gg.base.Board">
         <constructor-arg index="0" ref="tile-types"/>
         <constructor-arg index="1" ref="game"/>
-        <constructor-arg index="2" value="Foyer"/>
-        <constructor-arg index="3" ref="Foyer-map"/>
+        <constructor-arg index="2" value="foyer"/>
+        <constructor-arg index="3" ref="foyer-map"/>
         <constructor-arg index="4">
             <map>
                 <entry key="*">
@@ -204,7 +204,7 @@
                         </bean>
                     </key>
                     <map>
-                        <entry key="portal-destination-board" value="Foyer"/>
+                        <entry key="portal-destination-board" value="foyer"/>
                     </map>
                 </entry>
             </map>
