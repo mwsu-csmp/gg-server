@@ -5,6 +5,9 @@ let grassTile;
 let deadTile;
 let waterTile;
 let missingTexture;
+let playerUser;
+let playerAdmin;
+let playerGuide;
 
 let lastMovement="";
 let username;
@@ -193,7 +196,6 @@ function setupPixi() {
     app = new PIXI.Application({
         width: (boardWidth-1) * TILE_SIZE, height: boardHeight * TILE_SIZE,
         backgroundColor: 0x9999bb
-        //resolution: window.devicePixelRatio || 1
     });
 
     document.body.appendChild(app.view);
@@ -245,13 +247,6 @@ function drawEntity(entitySprite, xCoord, yCoord){
 
 // ***** The following methods display 'debugging'    *****
 // ***** information that's retrieved from the server *****
-
-
-//sends coordinates (currently only x) to server
-function sendDX(){
-    stompClient.send("/index/com/gg/player", {}, JSON.stringify({x: this.x, y: this.y}));
-}
-
 //sends a command
 function sendCommand(command, parameter) {
     stompClient.send("/index/gg/command", {}, JSON.stringify(
@@ -263,31 +258,11 @@ function sendCommand(command, parameter) {
 }
 
 
-
-
-function sendInitRequest(){
-    console.log("Board Received");
-    stompClient.send("/index/com/gg/board", {}, JSON.stringify(1))
-
-}
-
-function showXY(coordinates) {
-    document.getElementById('serverXY').innerHTML = "Server Coordinates: " + coordinates;
-}
-
-//last key pressed (not working yet)
-function showKeyPressed(keyPressed){
-    document.getElementById('keyPressed').innerHTML = "Last Key Pressed: " + keyPressed;
-}
-
-
-
-
 function eventReaction(event) {
 
     switch (event.type) {
         //TODO: need to add an ability to distiguish if its for the main player or a different player
-        //TODO: the if below is for the ability to know if it was their own player or not
+        //the if below is for the ability to know if it was their own player or not
         case "EntityMovedEvent":
 
             $.getJSON("../entity/"+event.properties.entity,function (entity) {
@@ -302,20 +277,26 @@ function eventReaction(event) {
                 if (entity.properties.player!=undefined){
                     enityUserName=entity.properties.player;
                     if (enityUserName==username){
-                        createScene();
-                        drawEntity(playerSprite,entity.column*TILE_SIZE,entity.row*TILE_SIZE);
+                        playerUser = {
+                            sprite:playerSprite,xCo:entity.column*TILE_SIZE,yCo:entity.row*TILE_SIZE
+                        };
+                        updateScene();
                     }
                     else{
                         console.log("another player moved!");
-                        createScene();
-                        drawEntity(OtherPlayerSprite,entity.column*TILE_SIZE,entity.row*TILE_SIZE);
+                        playerAdmin = {
+                            sprite:OtherPlayerSprite,xCo:entity.column*TILE_SIZE,yCo:entity.row*TILE_SIZE
+                        };
+                        updateScene();
                     }
 
                 }
                 else if(entity.properties.sprites=="guide"){
                     console.log("this is a guide");
-                    createScene();
-                    drawEntity(GuideSprite,entity.column*TILE_SIZE,entity.row*TILE_SIZE);
+                    playerGuide = {
+                        sprite:GuideSprite,xCo:entity.column*TILE_SIZE,yCo:entity.row*TILE_SIZE
+                    };
+                    updateScene();
                 }
                 else{//dont know what they are
                     console.log("unknown entity movement");
@@ -375,4 +356,12 @@ function getInfo(boardName){
     });
 
 
+}
+
+//TODO: make modular by using Entity ID # and iteration
+function updateScene(){
+    createScene();
+    drawEntity(playerGuide.sprite,playerGuide.xCo,playerGuide.yCo);
+    drawEntity(playerAdmin.sprite,playerAdmin.xCo,playerAdmin.yCo);
+    drawEntity(playerUser.sprite,playerUser.xCo,playerUser.xCo);
 }

@@ -72,7 +72,7 @@ public class    PlayerAvatar extends Entity implements EventListener, Container 
     }
 
     public void reset() {
-        var foyer = getGame().getBoard("Foyer");
+        var foyer = getGame().getBoard("foyer");
         var location = foyer.getTileStream()  // find location of guide spawn tile (should be exactly 1)
                 .filter(tile -> tile.getType().equals("player-spawn"))
                 .findFirst().get();
