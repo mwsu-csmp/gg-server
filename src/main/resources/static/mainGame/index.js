@@ -9,7 +9,9 @@ let missingTexture;
 let lastMovement="";
 let username;
 let myUserEnityId;
-let helperTemp;
+let helperTemp;//for eventReactionHelper
+let helperTemp1;//for get row
+let helperTemp2;//for get column
 
 let boardWidth;
 let boardHeight;
@@ -237,7 +239,7 @@ function createScene(){
         }
     }
 
-    drawEntity(playerSprite, x, y);
+    //drawEntity(playerSprite, x, y);
 }
 
 function drawEntity(entitySprite, xCoord, yCoord){
@@ -305,20 +307,32 @@ function eventReaction(event) {
         case "EntityMovedEvent":
             console.log(event);
             let temp= eventReactionHelper(event.properties.entity);
-
+            let tempCol;
+            let tempRow;
             switch (temp) {
                 case "player":
-
+                    tempCol=getColumn(event.properties.entity);
+                    tempRow=getRow(event.properties.entity);
                     if(event.properties.entity==myUserEnityId){
-                        console.log("I moved");
+                        console.log("I moved- im at row:"+tempRow+"  column:"+tempCol);
+                        createScene();
+                        drawEntity(playerSprite,tempRow*TILE_SIZE,tempCol*TILE_SIZE);
+
+
                     }
                     else{
-                        console.log("someone else moved");
+                        console.log("someone else moved- im at row:"+tempRow+"  column:"+tempCol);
+                        createScene();
+                        drawEntity(OtherPlayerSprite,tempRow*TILE_SIZE,tempCol*TILE_SIZE);
                     }
 
                     break;
                 case "guide":
-                    console.log("the guide moved");
+                    tempCol=getColumn(event.properties.entity);
+                    tempRow=getRow(event.properties.entity);
+                    console.log("the guide moved- im at row:"+tempRow+"  column:"+tempCol);
+                    createScene();
+                    drawEntity(GuideSprite,tempRow*TILE_SIZE,tempCol*TILE_SIZE);
                     break;
                 default:
                     console.log("Client does not know this enity")
@@ -346,9 +360,26 @@ function eventReactionHelper(entityNum) {
 
     });
     return helperTemp;
-
-
 }
+
+function getRow(entityNum) {
+    $.getJSON("../entity/"+entityNum,function (entity) {
+        helperTemp1=entity.row;
+    });
+    return helperTemp1;
+}
+
+function getColumn(entityNum) {
+    $.getJSON("../entity/"+3,function (entity) {
+        helperTemp2=entity.column;
+    });
+    return helperTemp2;
+}
+
+
+
+
+
 
 
 //returns the tile from a map of tiles using the value of another map

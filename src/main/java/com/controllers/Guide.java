@@ -61,7 +61,7 @@ public class Guide extends Entity implements EventListener, Runnable {
     @Override
     public void run() {
         while(true) { // walk randomly indefinitely
-            try { Thread.sleep(40000); } catch(Exception e) {}
+            try { Thread.sleep(10000); } catch(Exception e) {}
             logger.info("guide walking around");
             var direction = Direction.values()[(int)(Math.random()*4)];
             if(!(getGame().getEntityLocation(this) instanceof  Tile))
