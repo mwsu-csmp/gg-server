@@ -21,6 +21,7 @@ public class    PlayerAvatar extends Entity implements EventListener, Container 
         super(game, Map.of("player", player.getID()));
         this.player = player;
         game.registerListener(player);
+        reset();
     }
 
     /** returns the player associated with this avatar entity */
@@ -29,7 +30,6 @@ public class    PlayerAvatar extends Entity implements EventListener, Container 
     @Override
     public void accept(Event event) {
         if(event instanceof CommandEvent) {
-            reset();
             if(event.getProperty("player").equals(player.getID())) {
                 switch(event.getProperty("command")) {
                     case "MOVE": // move entity in the specified direction

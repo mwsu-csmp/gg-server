@@ -305,40 +305,43 @@ function eventReaction(event) {
         //TODO: need to add an ability to distiguish if its for the main player or a different player
         //TODO: the if below is for the ability to know if it was their own player or not
         case "EntityMovedEvent":
-            console.log(event);
-            let temp= eventReactionHelper(event.properties.entity);
-            let tempCol;
-            let tempRow;
-            switch (temp) {
-                case "player":
-                    tempCol=getColumn(event.properties.entity);
-                    tempRow=getRow(event.properties.entity);
-                    if(event.properties.entity==myUserEnityId){
-                        console.log("I moved- im at row:"+tempRow+"  column:"+tempCol);
+
+            $.getJSON("../entity/"+event.properties.entity,function (entity) {
+
+                //console.log(event);
+
+                let enityUserName;
+                console.log(entity);
+
+
+                if (entity.properties.player!=undefined){
+                    enityUserName=entity.properties.player;
+                    if (enityUserName==username){
+                        console.log("I moved!");
                         createScene();
-                        drawEntity(playerSprite,tempRow*TILE_SIZE,tempCol*TILE_SIZE);
-
-
+                        drawEntity(playerSprite,entity.column*TILE_SIZE,entity.row*TILE_SIZE);
                     }
                     else{
-                        console.log("someone else moved- im at row:"+tempRow+"  column:"+tempCol);
+                        console.log("another player moved!");
                         createScene();
-                        drawEntity(OtherPlayerSprite,tempRow*TILE_SIZE,tempCol*TILE_SIZE);
+                        drawEntity(OtherPlayerSprite,entity.column*TILE_SIZE,entity.row*TILE_SIZE);
                     }
 
-                    break;
-                case "guide":
-                    tempCol=getColumn(event.properties.entity);
-                    tempRow=getRow(event.properties.entity);
-                    console.log("the guide moved- im at row:"+tempRow+"  column:"+tempCol);
+                }
+                else if(entity.properties.sprites=="guide"){
+                    console.log("this is a guide");
                     createScene();
-                    drawEntity(GuideSprite,tempRow*TILE_SIZE,tempCol*TILE_SIZE);
-                    break;
-                default:
-                    console.log("Client does not know this enity")
-            }
+                    drawEntity(GuideSprite,entity.column*TILE_SIZE,entity.row*TILE_SIZE);
+                }
+                else{//dont know what they are
+                    console.log("unknown entity movement");
+                }
 
-            //drawEntity(missingTexture, event.column * TILE_SIZE, event.row * TILE_SIZE);
+            });
+
+            break;
+        case "CommandEvent":
+            //ignore
             break;
         default:
             console.log("unregistered Event");
@@ -348,36 +351,10 @@ function eventReaction(event) {
 
 function eventReactionHelper(entityNum) {
     $.getJSON("../entity/"+entityNum,function (entity) {
-        if(entity.properties.player!=undefined){
-            helperTemp= "player";
-        }
-        else if(entity.properties.sprites=="guide"){
-            helperTemp= "guide";
-        }
-        else{
-            helperTemp= "unknown";
-        }
+       helperTemp=entity;
 
     });
-    return helperTemp;
 }
-
-function getRow(entityNum) {
-    $.getJSON("../entity/"+entityNum,function (entity) {
-        helperTemp1=entity.row;
-    });
-    return helperTemp1;
-}
-
-function getColumn(entityNum) {
-    $.getJSON("../entity/"+3,function (entity) {
-        helperTemp2=entity.column;
-    });
-    return helperTemp2;
-}
-
-
-
 
 
 
