@@ -5,6 +5,8 @@ let grassTile;
 let deadTile;
 let waterTile;
 let missingTexture;
+
+//TODO: MODULARIZE STORING PLAYER INFORMATION FOR RENDERING
 let playerUser;
 let playerAdmin;
 let playerGuide;
@@ -153,7 +155,7 @@ function updateKeys(e){
     }
 
 } // end updateKeys
-
+//TODO: may no longer not be needed due to pixi integration
 function draw(){
 
     //move the image
@@ -175,6 +177,7 @@ function draw(){
 } // end of draw
 
 //checks to see if the player is against a wall
+//TODO: May no longer be needed due to server handling, and lack of x/y use
 function boundaries(){
     if (x >= (boardWidth * TILE_SIZE)){
         //subtracts offset of character sprite
