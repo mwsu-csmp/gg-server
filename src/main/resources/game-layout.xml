@@ -82,7 +82,6 @@
         </constructor-arg>
     </bean>
 
-
     <bean id="foyer" class="edu.missouriwestern.csmp.gg.base.Board">
         <constructor-arg index="0" ref="tile-types"/>
         <constructor-arg index="1" ref="game"/>
