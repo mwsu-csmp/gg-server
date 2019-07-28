@@ -32,6 +32,7 @@ public class Guide extends Entity implements EventListener, Runnable {
         else if(event instanceof CommandEvent) { // see if someone wants you to talk to them
             var command = (CommandEvent)event;
             if(command.getCommandName().equals("INTERACT")) {
+                logger.info("Interact was pressed");
                 var player = getGame().getPlayer(command.getProperty("player"));
                 if(player instanceof StompClient) { // TODO: this cast sucks, shouldn't be tied to client, rethink approach
                     var avatar = ((StompClient)player).getAvatar();

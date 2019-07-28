@@ -75,7 +75,7 @@ function init(){ // called on startup
 
 
     //ajax info pulling
-    getUser();
+
     getInfo('foyer');//gets board info
 
 }
@@ -86,6 +86,7 @@ function connect() {
         console.log('Connected: ' + frame);
 
         stompClient.subscribe('/topic/event', function (message) {
+            getUser();
             eventReaction(JSON.parse(message.body));
         });
     });
@@ -143,12 +144,12 @@ function updateKeys(e){
         case "ArrowDown":
             sendCommand("MOVE", "SOUTH");
             currentKey = null;
-            lastMovement="South";
+            lastMovement="SOUTH";
             break;
 
         case "e":
         case "E":
-            sendCommand("INTERACTION", lastMovement.toString());
+            sendCommand("INTERACT", lastMovement.toString());
             // I have to string above just to ensure that the send is all string. just in case.
             currentKey=null;
             break;
@@ -274,7 +275,6 @@ function eventReaction(event) {
             $.getJSON("../entity/"+event.properties.entity,function (entity) {
 
 
-
                 let enityUserName;
                 console.log("\n\n~~~ ENTITY DESCRIPTION ~~~");
                 console.log(entity);
@@ -310,9 +310,13 @@ function eventReaction(event) {
             });
 
             break;
+        case "SpeechEvent":
+            window.alert(event.properties.message);
+            break;
         case "CommandEvent":
             //ignore
             break;
+
         default:
             console.log("unregistered Event");
 

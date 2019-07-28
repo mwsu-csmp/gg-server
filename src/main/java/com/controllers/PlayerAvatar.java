@@ -6,6 +6,7 @@ import edu.missouriwestern.csmp.gg.base.events.GameStartEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 
 
@@ -14,7 +15,7 @@ import java.util.Map;
 public class    PlayerAvatar extends Entity implements EventListener, Container {
 
     private final Player player;
-
+    private static Logger logger = Logger.getLogger(PlayerAvatar.class.getCanonicalName());
 
 
     public PlayerAvatar(Game game, Player player) {
@@ -55,12 +56,6 @@ public class    PlayerAvatar extends Entity implements EventListener, Container 
                             getGame().moveEntity(this, destination);
                         }
                         break;
-                    case "INTERACTION":
-                        //sam this is where you do all previous moves
-                        //remember if they log in and they have not pressed a diraction yet then they technically
-                        //have not chose a direction so I have "" or nothing. make sure to account for this and not
-                        //do anything if this is the case
-                        break;
                     default:
                         //not sure as what to do
                         //TODO: add logger to this class and put this in log
@@ -72,7 +67,7 @@ public class    PlayerAvatar extends Entity implements EventListener, Container 
     }
 
     public void reset() {
-        var foyer = getGame().getBoard("foyer");
+        var foyer = getGame().getBoard("outside");
         var location = foyer.getTileStream()  // find location of guide spawn tile (should be exactly 1)
                 .filter(tile -> tile.getType().equals("player-spawn"))
                 .findFirst().get();
