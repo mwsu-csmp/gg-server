@@ -51,7 +51,7 @@ function init(){ // called on startup
     document.onkeydown = updateKeys;//gets key presses
     connect();
     //TODO: fix onstart loading error to avoid hard coding this.
-    playerUser = {sprite:playerSprite,xCo:0,yCo:0}
+
 
       // TODO: get board name from entity creation event for player avatar
     asdf = new Map();
@@ -77,8 +77,6 @@ function init(){ // called on startup
     //ajax info pulling
     getUser();
     getInfo('foyer');//gets board info
-    setInterval(draw, 300);
-
 
 }
 function connect() {
@@ -157,6 +155,7 @@ function updateKeys(e){
     }
 
 } // end updateKeys
+ /*
 //TODO: may no longer not be needed due to pixi integration
 function draw(){
 
@@ -196,7 +195,7 @@ function boundaries(){
         y = 0;
     }
 }//end of wrap
-
+*/
 function setupPixi() {
     app = new PIXI.Application({
         width: (boardWidth-1) * TILE_SIZE, height: boardHeight * TILE_SIZE,
@@ -239,14 +238,16 @@ function createScene(){
 }
 
 function drawEntity(entitySprite, xCoord, yCoord){
-
-    const pixiPSprite = PIXI.Texture.from(entitySprite);
-    const entityTile = PIXI.Sprite.from(pixiPSprite);
-    entityTile.height = 60;
-    entityTile.width = 60;
-    entityTile.x = xCoord;
-    entityTile.y = yCoord;
-    container.addChild(entityTile);
+    if(entitySprite === null ) {
+    }else{
+        const pixiPSprite = PIXI.Texture.from(entitySprite);
+        const entityTile = PIXI.Sprite.from(pixiPSprite);
+        entityTile.height = 60;
+        entityTile.width = 60;
+        entityTile.x = xCoord;
+        entityTile.y = yCoord;
+        container.addChild(entityTile);
+    }
 }
 
 
@@ -355,7 +356,11 @@ function getInfo(boardName){
         boardHeight = board.height;
         boardMap = board.tilemap;
         console.log(boardWidth + "," + boardHeight);
+
         setupPixi();
+        playerUser = {sprite:playerSprite,xCo:x,yCo:y};
+        playerAdmin = {sprite:OtherPlayerSprite,xCo:x,yCo:y};
+        playerGuide = {sprite:playerSprite,xCo:0,yCo:0};
         createScene();
     });
 
@@ -365,8 +370,15 @@ function getInfo(boardName){
 //TODO: make modular by using Entity ID # and iteration
 function updateScene(){
     createScene();
-    drawEntity(playerGuide.sprite,playerGuide.xCo,playerGuide.yCo);
-    //drawEntity(playerAdmin.sprite,playerAdmin.xCo,playerAdmin.yCo);
-    drawEntity(playerUser.sprite,playerUser.xCo,playerUser.yCo);
+    testEntity(drawEntity(playerGuide.sprite,playerGuide.xCo,playerGuide.yCo));
+    testEntity(drawEntity(playerAdmin.sprite,playerAdmin.xCo,playerAdmin.yCo));
+    testEntity(drawEntity(playerUser.sprite,playerUser.xCo,playerUser.yCo));
 }
 
+function testEntity(entity){
+    try{
+        entity;
+    }catch(e){
+        console.log(e);
+    }
+}
