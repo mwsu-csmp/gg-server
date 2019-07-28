@@ -136,7 +136,7 @@ class Neo4jDatastore implements DataStore {
         String properties = "";
 
         for (Map.Entry properties1: map.entrySet()) {
-            properties += String.format(" %s: ", properties1.getKey()) + properties1.getValue() + ",";
+            properties += String.format(" %s: \'%s\',", properties1.getKey(), properties1.getValue());
         }
 
         if (properties.endsWith(",")) {
