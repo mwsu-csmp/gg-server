@@ -50,6 +50,8 @@ function init(){ // called on startup
 
     document.onkeydown = updateKeys;//gets key presses
     connect();
+    //TODO: fix onstart loading error to avoid hard coding this.
+    playerUser = {sprite:playerSprite,xCo:0,yCo:0}
 
       // TODO: get board name from entity creation event for player avatar
     asdf = new Map();
@@ -73,7 +75,7 @@ function init(){ // called on startup
 
 
     //ajax info pulling
-    getUsername();
+    getUser();
     getInfo('foyer');//gets board info
     setInterval(draw, 300);
 
@@ -92,7 +94,7 @@ function connect() {
 }
 
 //this is to get the name of the client from the htlm through ajax
-function getUsername(){
+function getUser(){
     username= $($.find('h1')[0]).html();
     console.log("Username: "+ username);
     getUsername(username);
@@ -283,28 +285,27 @@ function eventReaction(event) {
                         playerUser = {
                             sprite:playerSprite,xCo:entity.column*TILE_SIZE,yCo:entity.row*TILE_SIZE
                         };
-                        updateScene();
+                        //updateScene();
                     }
                     else{
                         console.log("another player moved!");
                         playerAdmin = {
                             sprite:OtherPlayerSprite,xCo:entity.column*TILE_SIZE,yCo:entity.row*TILE_SIZE
                         };
-                        updateScene();
+                        //updateScene();
                     }
 
                 }
                 else if(entity.properties.sprites=="guide"){
-                    console.log("this is a guide");
                     playerGuide = {
                         sprite:GuideSprite,xCo:entity.column*TILE_SIZE,yCo:entity.row*TILE_SIZE
                     };
-                    updateScene();
+                    //updateScene();
                 }
                 else{//dont know what they are
                     console.log("unknown entity movement");
                 }
-
+                updateScene();
             });
 
             break;
@@ -365,6 +366,7 @@ function getInfo(boardName){
 function updateScene(){
     createScene();
     drawEntity(playerGuide.sprite,playerGuide.xCo,playerGuide.yCo);
-    drawEntity(playerAdmin.sprite,playerAdmin.xCo,playerAdmin.yCo);
-    drawEntity(playerUser.sprite,playerUser.xCo,playerUser.xCo);
+    //drawEntity(playerAdmin.sprite,playerAdmin.xCo,playerAdmin.yCo);
+    drawEntity(playerUser.sprite,playerUser.xCo,playerUser.yCo);
 }
+
