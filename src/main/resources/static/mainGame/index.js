@@ -6,14 +6,17 @@ let deadTile;
 let waterTile;
 let missingTexture;
 
-//TODO: MODULARIZE STORING PLAYER INFORMATION FOR RENDERING
+
 let playerUser;
+let playerUserBoard;
+let playerUserSpawn;
+//TODO: store any entity that is given
 let playerAdmin;
 let playerGuide;
 
 let lastMovement="";
 let username;
-let myUserEnityId;
+let myUserEntityId;
 let helperTemp;//for eventReactionHelper
 
 let boardWidth;
@@ -22,6 +25,7 @@ let charAlias = new Map();
 let tileAlias;
 let boardMap;
 let asdf;
+let lastLocation = {x:0,y:0};//column/row not pixel
 
 let column;
 let row;
@@ -76,7 +80,9 @@ function init(){ // called on startup
 
     //ajax info pulling
 
-    getInfo('foyer');//gets board info
+    getInfo('outside');//gets board info
+    setupPixi();
+    createScene();
 
 }
 function connect() {
@@ -103,7 +109,7 @@ function getUser(){
 
 function getUsername(username) {
     $.getJSON("../player-avatar/"+username,function (entity) {
-        myUserEnityId= entity.id;
+        myUserEntityId= entity.id;
     });
 }
 
@@ -156,100 +162,7 @@ function updateKeys(e){
     }
 
 } // end updateKeys
- /*
-//TODO: may no longer not be needed due to pixi integration
-function draw(){
 
-    //move the image
-    x += dx;
-    dx = 0;
-    y += dy;
-    dy = 0;
-
-    //check for boundaries
-    drawEntity(playerSprite, x, y);
-    boundaries();
-
-
-
-    //updating displayed coordinates
-    document.getElementById('coordinates').innerHTML = "Coordinates: (" + (x/TILE_SIZE) + "," + (y/TILE_SIZE) + ")";
-    document.getElementById('actualXY').innerHTML = "Coordinates: (" + x + "," + y + ")";
-
-} // end of draw
-
-//checks to see if the player is against a wall
-//TODO: May no longer be needed due to server handling, and lack of x/y use
-function boundaries(){
-    if (x >= (boardWidth * TILE_SIZE)){
-        //subtracts offset of character sprite
-        x = (boardWidth * TILE_SIZE)-TILE_SIZE;
-    }
-    if (x < 0){
-        x = 0;
-    }
-    if (y >= (boardHeight*TILE_SIZE)){
-        //subtracts offset of character sprite
-        y = (boardHeight*TILE_SIZE)-TILE_SIZE;
-    } // end if
-    if (y < 0){
-        y = 0;
-    }
-}//end of wrap
-*/
-function setupPixi() {
-    app = new PIXI.Application({
-        width: (boardWidth-1) * TILE_SIZE, height: boardHeight * TILE_SIZE,
-        backgroundColor: 0x9999bb
-    });
-
-    document.body.appendChild(app.view);
-
-    container = new PIXI.Container();
-    app.stage.addChild(container);
-
-//creating grass textures
-
-}
-function createScene(){
-    let pos = 0;
-    for(let iy = 0; iy < boardHeight; iy++){
-        for(let ix = 0; ix < boardWidth; ix++) {
-            switch(boardMap.charAt(pos)){
-                case "\n":
-                    pos++;
-                    break;
-                case "*":
-                    x = ix * TILE_SIZE;
-                    y = iy * TILE_SIZE;
-                default:
-                    const textureGrass = PIXI.Texture.from(getTile(boardMap.charAt(pos)));
-                    const tile = new PIXI.Sprite(textureGrass);
-                    tile.height = TILE_SIZE;
-                    tile.width = TILE_SIZE;
-                    tile.x = ix * TILE_SIZE;
-                    tile.y = iy * TILE_SIZE;
-                    container.addChild(tile);
-                    pos++;
-            }
-        }
-    }
-
-    //drawEntity(playerSprite, x, y);
-}
-
-function drawEntity(entitySprite, xCoord, yCoord){
-    if(entitySprite === null ) {
-    }else{
-        const pixiPSprite = PIXI.Texture.from(entitySprite);
-        const entityTile = PIXI.Sprite.from(pixiPSprite);
-        entityTile.height = 60;
-        entityTile.width = 60;
-        entityTile.x = xCoord;
-        entityTile.y = yCoord;
-        container.addChild(entityTile);
-    }
-}
 
 
 // ***** The following methods display 'debugging'    *****
@@ -264,7 +177,6 @@ function sendCommand(command, parameter) {
     ));
 }
 
-
 function eventReaction(event) {
 
     switch (event.type) {
@@ -275,21 +187,24 @@ function eventReaction(event) {
             $.getJSON("../entity/"+event.properties.entity,function (entity) {
 
 
-                let enityUserName;
+                let entityUserName;
                 console.log("\n\n~~~ ENTITY DESCRIPTION ~~~");
                 console.log(entity);
 
 
                 if (entity.properties.player!=undefined){
-                    enityUserName=entity.properties.player;
-                    if (enityUserName==username){
+                    entityUserName=entity.properties.player;
+                    if (entityUserName==username){
                         playerUser = {
                             sprite:playerSprite,xCo:entity.column*TILE_SIZE,yCo:entity.row*TILE_SIZE
                         };
+                        console.log("%%%%%%%%%%%%%%%%%%%%%%%%%");
+                        playerUserBoard = entity.board;
+
+
                         //updateScene();
                     }
                     else{
-                        console.log("another player moved!");
                         playerAdmin = {
                             sprite:OtherPlayerSprite,xCo:entity.column*TILE_SIZE,yCo:entity.row*TILE_SIZE
                         };
@@ -306,6 +221,7 @@ function eventReaction(event) {
                 else{//dont know what they are
                     console.log("unknown entity movement");
                 }
+
                 updateScene();
             });
 
@@ -330,7 +246,58 @@ function eventReactionHelper(entityNum) {
     });
 }
 
+function setupPixi() {
+    app = new PIXI.Application({
+        width: (boardWidth-1) * TILE_SIZE, height: boardHeight * TILE_SIZE,
+        backgroundColor: 0x9999bb
+    });
 
+    document.body.appendChild(app.view);
+
+    container = new PIXI.Container();
+    app.stage.addChild(container);
+
+}
+
+function createScene(){
+    let pos = 0;
+    for(let iy = 0; iy < boardHeight; iy++){
+        for(let ix = 0; ix < boardWidth; ix++) {
+            switch(boardMap.charAt(pos)){
+                case "\n":
+                    pos++;
+                    break;
+                case "*":
+                    playerUserSpawn = {xCol:ix,yCol:iy};
+                default:
+                    const textureGrass = PIXI.Texture.from(getTile(boardMap.charAt(pos)));
+                    const tile = new PIXI.Sprite(textureGrass);
+                    tile.height = TILE_SIZE;
+                    tile.width = TILE_SIZE;
+                    tile.x = ix * TILE_SIZE;
+                    tile.y = iy * TILE_SIZE;
+                    container.addChild(tile);
+
+                    pos++;
+            }
+        }
+    }
+
+
+}
+
+function drawEntity(entitySprite, xCoord, yCoord){
+    if(entitySprite === null ) {
+    }else{
+        const pixiPSprite = PIXI.Texture.from(entitySprite);
+        const entityTile = PIXI.Sprite.from(pixiPSprite);
+        entityTile.height = 60;
+        entityTile.width = 60;
+        entityTile.x = xCoord;
+        entityTile.y = yCoord;
+        container.addChild(entityTile);
+    }
+}
 
 
 //returns the tile from a map of tiles using the value of another map
@@ -361,11 +328,11 @@ function getInfo(boardName){
         boardMap = board.tilemap;
         console.log(boardWidth + "," + boardHeight);
 
-        setupPixi();
+
         playerUser = {sprite:playerSprite,xCo:x,yCo:y};
         playerAdmin = {sprite:OtherPlayerSprite,xCo:x,yCo:y};
         playerGuide = {sprite:playerSprite,xCo:0,yCo:0};
-        createScene();
+
     });
 
 
@@ -374,15 +341,18 @@ function getInfo(boardName){
 //TODO: make modular by using Entity ID # and iteration
 function updateScene(){
     createScene();
-    testEntity(drawEntity(playerGuide.sprite,playerGuide.xCo,playerGuide.yCo));
-    testEntity(drawEntity(playerAdmin.sprite,playerAdmin.xCo,playerAdmin.yCo));
-    testEntity(drawEntity(playerUser.sprite,playerUser.xCo,playerUser.yCo));
+    drawEntity(playerGuide.sprite,playerGuide.xCo,playerGuide.yCo);
+    drawEntity(playerAdmin.sprite,playerAdmin.xCo,playerAdmin.yCo);
+    drawEntity(playerUser.sprite,playerUser.xCo,playerUser.yCo);
 }
 
-function testEntity(entity){
-    try{
-        entity;
-    }catch(e){
-        console.log(e);
-    }
+
+function loadNewBoard(){
+    container.destroy();
+    app.destroy();
+    $('canvas').remove();
+    getInfo(playerUserBoard);
+    setupPixi();
+    createScene();
+    updateScene();
 }
