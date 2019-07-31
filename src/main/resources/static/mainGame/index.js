@@ -216,7 +216,9 @@ function eventReaction(event) {
                 if (entity.properties.player!=undefined){
                     enityUserName=entity.properties.player;
                     if (enityUserName==username){
-                        // TODO: see if you switched boards
+                        if(entity.board != currentBoardName) {
+                            loadBoard(entity.board);
+                        }
                     }
                 }
 
