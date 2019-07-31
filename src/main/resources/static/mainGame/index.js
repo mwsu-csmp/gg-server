@@ -20,6 +20,7 @@ let asdf;
 let entitySprites = {};
 
 TILE_SIZE = 60;
+WINDOW_SIZE = 30 * TILE_SIZE;
 let app;
 let container;
 
@@ -56,7 +57,7 @@ function init(){ // called on startup
 
 
     app = new PIXI.Application({
-        width: (20) * TILE_SIZE, height: 20 * TILE_SIZE,
+        width: WINDOW_SIZE, height: WINDOW_SIZE,
         backgroundColor: 0x9999bb
     });
 
