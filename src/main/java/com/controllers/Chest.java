@@ -4,11 +4,14 @@ import edu.missouriwestern.csmp.gg.base.*;
 import edu.missouriwestern.csmp.gg.base.events.CommandEvent;
 
 import java.util.Map;
+import java.util.logging.Logger;
 
 public class Chest extends Entity implements EventListener, Container {
 
-    private boolean isOpen = false;
+    private static Logger logger = Logger.getLogger(Guide.class.getCanonicalName());
 
+    private boolean isOpen = false;
+    private final String[] messages = {"Opened the Chest"};
     public Chest(Game game, Container startingLocation) {
         super(game, Map.of("sprites", "chest-normal",
                 "character", "▣",
@@ -17,7 +20,7 @@ public class Chest extends Entity implements EventListener, Container {
                 startingLocation);
     }
 
-
+    @Override
     public void accept(Event event) {
         if (event instanceof CommandEvent) { // see if someone wants you to talk to them
             var command = (CommandEvent) event;
@@ -34,6 +37,9 @@ public class Chest extends Entity implements EventListener, Container {
                             if (target == getGame().getEntityLocation(this)) {
                                 getEntities().forEach(avatar::addEntity);
                                 this.isOpen = true;
+                                logger.info("chest was opened");
+                                getGame().accept(new SpeechEvent(getGame(), this,
+                                        messages[(int)(Math.random()*messages.length)]));
                             }
                         }
                     }

@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 
 /** gives a player a presence within the game */
 @Permanent
-public class    PlayerAvatar extends Entity implements EventListener, Container {
+public class PlayerAvatar extends Entity implements EventListener, Container {
 
     private final Player player;
     private static Logger logger = Logger.getLogger(PlayerAvatar.class.getCanonicalName());
