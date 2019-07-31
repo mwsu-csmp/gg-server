@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 public class GameInfoController {
@@ -79,6 +80,16 @@ public class GameInfoController {
             }
         }
         return gson.toJson(contents);
+    }
+
+    /** returns a list of all entity id's held by tiles on the board */
+    @GetMapping("/container/board/{boardId}")
+    @ResponseBody
+    public String getBoardContents(@PathVariable String boardId) {
+        return gson.toJson(game.getBoard(boardId).getTileStream()
+                .flatMap(tile -> tile.getEntities())
+                .map(entity -> entity.getID())
+                .collect(Collectors.toList()));
     }
 
     /** displays a JSON list of id's of contained entities */

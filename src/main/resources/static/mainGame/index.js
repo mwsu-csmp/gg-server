@@ -165,22 +165,20 @@ function loadBoard(boardName){
                         tile.y = iy * TILE_SIZE;
                         container.addChild(tile);
 
-                        // add entities on the tile (if any)
-                        // TODO: add a web service that returns all entities for a board, this is inefficient
-                        $.getJSON('/container/tile/'+currentBoardName+'/'+ix+'/'+iy,
-                            function(entityIds) {
-                               entityIds.forEach(function (id) {
-                                    $.getJSON('/entity/'+id, function(entity) {
-                                        console.log('drawing entity ' + entity.id);
-                                        drawEntity(entity);
-                                    });
-                                });
-                            });
-
                         pos++;
                 }
             }
         }
+        // add entities on the tile (if any)
+        $.getJSON('/container/board/'+currentBoardName,
+            function(entityIds) {
+                entityIds.forEach(function (id) {
+                    $.getJSON('/entity/'+id, function(entity) {
+                        drawEntity(entity);
+                    });
+                });
+            }
+        );
     });
 }
 
@@ -218,10 +216,8 @@ function sendCommand(command, parameter) {
     ));
 }
 
-
 function eventReaction(event) {
     switch (event.type) {
-
         case "EntityCreatedEvent":
         case "EntityMovedEvent":
             $.getJSON("../entity/"+event.properties.entity,function (entity) {
@@ -230,13 +226,13 @@ function eventReaction(event) {
                 if (entity.properties.player!=undefined){
                     enityUserName=entity.properties.player;
                     if (enityUserName==username){
-                        if(entity.board != currentBoardName) {
+                        if(entity.board != currentBoardName) { // we moved to a new board, load it
                             loadBoard(entity.board);
                         }
                     }
                 }
 
-                if(entity.board = currentBoardName) { // draw it if it's on our board
+                if(entity.board = currentBoardName) { // draw the entity if it's on our board
                     drawEntity(entity);
                 }
             });
@@ -250,10 +246,6 @@ function eventReaction(event) {
         case "CommandEvent":
             //ignore
             break;
-
-        default:
-            console.log("unregistered Event");
-
     }
 }
 
