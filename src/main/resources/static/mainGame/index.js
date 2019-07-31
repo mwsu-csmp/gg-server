@@ -163,6 +163,19 @@ function loadBoard(boardName){
                         tile.x = ix * TILE_SIZE;
                         tile.y = iy * TILE_SIZE;
                         container.addChild(tile);
+
+                        // add entities on the tile (if any)
+                        // TODO: add a web service that returns all entities for a board, this is inefficient
+                        $.getJSON('/container/tile/'+currentBoardName+'/'+ix+'/'+iy,
+                            function(entityIds) {
+                               entityIds.forEach(function (id) {
+                                    $.getJSON('/entity/'+id, function(entity) {
+                                        console.log('drawing entity ' + entity.id);
+                                        drawEntity(entity);
+                                    });
+                                });
+                            });
+
                         pos++;
                 }
             }
