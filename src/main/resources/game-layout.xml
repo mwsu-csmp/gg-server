@@ -8,6 +8,7 @@
     <util:map id="tile-types" map-class="java.util.HashMap">
         <entry value="wall" key="#"/>
         <entry value="door" key="@"/>
+        <entry value="locked-door" key="L"/>
         <entry value="floor" key="-"/>
         <entry value="guide-spawn" key="%"/>
         <entry value="player-spawn" key="*"/>
@@ -26,6 +27,20 @@
             </bean>
         </constructor-arg>
     </bean>
+
+    <bean id="locked-door-1" class="com.controllers.LockedDoor">
+        <constructor-arg ref="game"/>
+        <constructor-arg>
+            <bean factory-bean="aggensteinFoyer" factory-method="getTile">
+                <constructor-arg value = "28"/>
+                <constructor-arg value = "11"/>
+            </bean>
+        </constructor-arg>
+        <constructor-arg ref="SpellcraftKey"/>
+    </bean>
+
+
+
     <bean id="SpellcraftKey" class="com.controllers.SpellcraftKey">
         <constructor-arg index="0" ref="game"/>
         <constructor-arg index="1" ref="chest1"/>
