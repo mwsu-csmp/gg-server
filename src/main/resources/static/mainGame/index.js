@@ -232,7 +232,7 @@ function eventReaction(event) {
                     }
                 }
 
-                if(entity.board = currentBoardName) { // draw the entity if it's on our board
+                if(entity.board == currentBoardName) { // draw the entity if it's on our board
                     drawEntity(entity);
                 }
             });
