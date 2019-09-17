@@ -1,4 +1,4 @@
-package com.controllers;
+package edu.missouriwestern.csmp.gg.server.events;
 
 import edu.missouriwestern.csmp.gg.base.*;
 

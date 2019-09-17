@@ -1,17 +1,13 @@
-package com.controllers;
-import edu.missouriwestern.csmp.gg.base.*;
+package edu.missouriwestern.csmp.gg.server.controllers;
+import edu.missouriwestern.csmp.gg.base.Game;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.util.HtmlUtils;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 import java.security.Principal;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.springframework.stereotype.Controller;
-
-import org.springframework.beans.factory.annotation.Autowired;
 
 import static edu.missouriwestern.csmp.gg.base.events.CommandEvent.issueCommandEventFromJson;
 
@@ -21,7 +17,7 @@ public class PlayerController {
     private Gson gson;
 
     @Autowired
-    private GameMapping game;
+    private Game game;
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
 

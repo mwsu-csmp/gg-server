@@ -1,4 +1,4 @@
-package com.controllers;
+package edu.missouriwestern.csmp.gg.server.networking;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;

@@ -1,41 +1,31 @@
-package com.controllers;
+package edu.missouriwestern.csmp.gg.server.game;
 
 import edu.missouriwestern.csmp.gg.base.*;
 import edu.missouriwestern.csmp.gg.base.events.GameStartEvent;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.core.task.TaskExecutor;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import org.springframework.stereotype.Component;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-@Component("game")
-public class GameMapping extends Game {
+public class MissouriWizardStateUniversityGame extends Game {
 
-    private static Logger logger = Logger.getLogger(GameMapping.class.getCanonicalName());
-
-    @Autowired
-    private StompEvent stompEventPublisher;
-
-    @Autowired
-    @Qualifier("taskExecutor")
+    private static Logger logger = Logger.getLogger(MissouriWizardStateUniversityGame.class.getCanonicalName());
     private TaskExecutor taskExecutor;
+    private List<EventListener> initialListeners;
 
-    public GameMapping() throws Exception {
-        super(new Neo4jDatastore("bolt://localhost:7687", "neo4j", "password"));
-        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(4);
-        executor.setMaxPoolSize(4);
-        executor.setThreadNamePrefix("default_task_executor_thread");
-        executor.initialize();
+    public MissouriWizardStateUniversityGame(DataStore dataStore,
+                                             TaskExecutor taskExecutor,
+                                             EventListener ... listeners)
+            throws Exception {
+        super(dataStore);
+        this.taskExecutor = taskExecutor;
+        this.initialListeners = Arrays.asList(listeners);
     }
 
     @Override
@@ -48,22 +38,22 @@ public class GameMapping extends Game {
     }
 
     /** loads boards at start of server */
-    @EventListener
+    @org.springframework.context.event.EventListener
     public void handleContextRefresh(ContextRefreshedEvent event) {
         var maps = event.getApplicationContext().getBeansOfType(Board.class);
         for(var mapName : maps.keySet()) {
             this.addBoard(mapName, maps.get(mapName));
             logger.info("loading map " + mapName + ": \n" + maps.get(mapName));
         }
-        registerListener(new EventLogger());  // log all events
-        registerListener(stompEventPublisher);  // log all events
+        for(var listener : initialListeners)
+            registerListener(listener);
         accept(new GameStartEvent(this));     // indicate game is starting
     }
 
     /** loads a text file resource as a string */
     public static String loadMap(String mapFileName) throws IOException {
         var mapString = new BufferedReader(new InputStreamReader(
-                GameMapping.class.getClassLoader()
+                MissouriWizardStateUniversityGame.class.getClassLoader()
                         .getResourceAsStream(mapFileName)))
                 .lines().collect(Collectors.joining("\n"));
         return mapString;

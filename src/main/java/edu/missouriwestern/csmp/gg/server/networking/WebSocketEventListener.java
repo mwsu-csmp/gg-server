@@ -1,4 +1,4 @@
-package com.controllers;
+package edu.missouriwestern.csmp.gg.server.networking;
 
 import edu.missouriwestern.csmp.gg.base.Game;
 import org.slf4j.Logger;

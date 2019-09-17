@@ -1,4 +1,4 @@
-package com.controllers;
+package edu.missouriwestern.csmp.gg.server.networking;
 
 import java.util.Arrays;
 

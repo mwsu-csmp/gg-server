@@ -1,9 +1,9 @@
-package com.controllers;
+package edu.missouriwestern.csmp.gg.server.networking;
 
-import com.controllers.PlayerAvatar;
 import edu.missouriwestern.csmp.gg.base.Event;
 import edu.missouriwestern.csmp.gg.base.Game;
 import edu.missouriwestern.csmp.gg.base.Player;
+import edu.missouriwestern.csmp.gg.server.entities.PlayerAvatar;
 
 public class StompClient extends Player {
 

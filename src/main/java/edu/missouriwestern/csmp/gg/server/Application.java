@@ -1,16 +1,18 @@
 
-package com.controllers;
+package edu.missouriwestern.csmp.gg.server;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ImportResource;
-import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
-@SpringBootApplication
-@ImportResource("classpath:game-layout.xml")
+@SpringBootApplication()
+@ImportResource({
+        "classpath:game-layout.xml",
+        "classpath:server-config.xml"
+})
 public class Application {
 
     public static void main(String[] args) {

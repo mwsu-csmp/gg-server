@@ -1,4 +1,4 @@
-package com.controllers;
+package edu.missouriwestern.csmp.gg.server.entities;
 
 import edu.missouriwestern.csmp.gg.base.Entity;
 import edu.missouriwestern.csmp.gg.base.Game;

@@ -1,8 +1,10 @@
-package com.controllers;
+package edu.missouriwestern.csmp.gg.server.controllers;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import edu.missouriwestern.csmp.gg.base.Container;
+import edu.missouriwestern.csmp.gg.base.Game;
+import edu.missouriwestern.csmp.gg.server.networking.StompClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +23,10 @@ import java.util.stream.Collectors;
 public class GameInfoController {
     Logger log = LoggerFactory.getLogger(GameInfoController.class);
 
-
     private Gson gson;
 
     @Autowired
-    private GameMapping game;
+    private Game game;
 
     public GameInfoController() {
         var builder = new GsonBuilder();

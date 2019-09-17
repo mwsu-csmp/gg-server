@@ -1,8 +1,10 @@
-package com.controllers;
+package edu.missouriwestern.csmp.gg.server.entities;
 
 import edu.missouriwestern.csmp.gg.base.*;
 import edu.missouriwestern.csmp.gg.base.events.CommandEvent;
 import edu.missouriwestern.csmp.gg.base.events.GameStartEvent;
+import edu.missouriwestern.csmp.gg.server.events.SpeechEvent;
+import edu.missouriwestern.csmp.gg.server.networking.StompClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;

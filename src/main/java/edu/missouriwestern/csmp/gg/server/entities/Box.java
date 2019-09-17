@@ -1,8 +1,9 @@
-package com.controllers;
+package edu.missouriwestern.csmp.gg.server.entities;
 
 import edu.missouriwestern.csmp.gg.base.*;
 import edu.missouriwestern.csmp.gg.base.events.EntityMovedEvent;
 import edu.missouriwestern.csmp.gg.base.events.TileStateUpdateEvent;
+import edu.missouriwestern.csmp.gg.server.events.PushEvent;
 
 import java.util.Map;
 
