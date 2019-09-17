@@ -129,7 +129,7 @@ public class GameInfoController {
     }
 
 
-    @GetMapping("/maingame/client")
+    @GetMapping("/game/client")
     public String loadClientGUI(Map<String, Object> model,
                                HttpServletRequest request,
                                HttpServletResponse response) {
