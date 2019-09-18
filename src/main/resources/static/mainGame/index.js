@@ -1,10 +1,4 @@
-let playerSprite;
-let GuideSprite;
-let OtherPlayerSprite;
-let grassTile;
-let deadTile;
-let waterTile;
-let missingTexture;
+let sprites;
 
 let lastMovement="";
 let username;
@@ -14,10 +8,8 @@ let currentBoardName;
 let boardWidth;
 let boardHeight;
 let charAlias = new Map();
-let tileAlias;
 let boardMap;
-let asdf;
-let entitySprites = {};
+let entitySprites;
 
 TILE_SIZE = 60;
 WINDOW_SIZE = 30 * TILE_SIZE;
@@ -29,32 +21,25 @@ let boardInfoURL = '/board';
 function init(){ // called on startup
 
     //getting images TODO: search for pixi texture loading
-    playerSprite = document.getElementById("PlayerSprite");
-    OtherPlayerSprite = document.getElementById("OtherPlayerSprite");
-    GuideSprite = document.getElementById("GuideSprite");
-    missingTexture = document.getElementById("noTexture");
-    grassTile = document.getElementById("grass");
-    deadTile = document.getElementById("grassDead");
-    waterTile = document.getElementById("water");
-
+    sprites = [];
+    sprites["water"] = document.getElementById("water");
+    sprites["grassDead"] = document.getElementById("grassDead");
+    sprites["grass"] = document.getElementById("grass");
+    sprites["door"] = document.getElementById("door");
+    sprites["npc"] = document.getElementById("GuideSprite");
+    sprites["OtherPlayerSprite"] = document.getElementById("OtherPlayerSprite");
+    sprites["player-avatar"] = document.getElementById("PlayerSprite");
 
     document.onkeydown = updateKeys;//gets key presses
 
-    asdf = new Map();
-    asdf.set("-", "grass1");
-    asdf.set("#", "deadGrass");
-    asdf.set("@", "door");
-    asdf.set("*", "door");
-    asdf.set("%", "grass1");
+    charAlias = [];
+    charAlias["-"] = "grass";
+    charAlias["#"] = "grassDead";
+    charAlias["@"] = "door";
+    charAlias["*"] = "door";
+    charAlias["%"] = "grass";
 
-    tileAlias = new Map();
-    tileAlias.set("grass1",grassTile);
-    tileAlias.set("deadGrass",deadTile);
-    tileAlias.set("door",waterTile );
-    tileAlias.set("guide", GuideSprite);
-
-    charAlias = asdf;
-
+    entitySprites = [];
 
     app = new PIXI.Application({
         width: WINDOW_SIZE, height: WINDOW_SIZE,
@@ -139,14 +124,12 @@ function loadBoard(boardName){
     $.getJSON(boardInfoURL+'/'+boardName, function(board){
         // first clear the board
         container.removeChildren();
-        entitySprites = {};
 
         // load board details
         currentBoardName = boardName;
         boardWidth = board.width+1;
         boardHeight = board.height;
         boardMap = board.tilemap;
-        console.log(board);
 
         // create board tiles
         let pos = 0;
@@ -157,8 +140,9 @@ function loadBoard(boardName){
                         pos++;
                         break;
                     default:
-                        const textureGrass = PIXI.Texture.from(getTile(boardMap.charAt(pos)));
-                        const tile = new PIXI.Sprite(textureGrass);
+                        tileImage = sprites[charAlias[boardMap.charAt(pos)]];
+                        const texture = PIXI.Texture.from(tileImage);
+                        const tile = new PIXI.Sprite(texture);
                         tile.height = TILE_SIZE;
                         tile.width = TILE_SIZE;
                         tile.x = ix * TILE_SIZE;
@@ -189,9 +173,8 @@ function drawEntity(entity){
         sprite.x = entity.column * TILE_SIZE;
         sprite.y = entity.row * TILE_SIZE;
         container.addChild(sprite);
-    } else { // create sprite for entity
-        // TODO: determine texture from entity properties
-        entityImage = playerSprite;
+    } else {
+        entityImage = sprites[entity.type];
         const texture = PIXI.Texture.from(entityImage);
         const sprite = PIXI.Sprite.from(texture);
         sprite.x = entity.column * TILE_SIZE;
@@ -246,25 +229,5 @@ function eventReaction(event) {
         case "CommandEvent":
             //ignore
             break;
-    }
-}
-
-//returns the tile from a map of tiles using the value of another map
-function getTile(character){
-    switch(character){
-        case "-":
-            return tileAlias.get(charAlias.get("-"));
-        case "#":
-            return tileAlias.get(charAlias.get("#"));
-        case "@":
-            return tileAlias.get(charAlias.get("@"));
-        case "*":
-            return tileAlias.get(charAlias.get("*"));
-        case "%":
-            return tileAlias.get(charAlias.get("%"));
-
-        default: return missingTexture;
-
-
     }
 }
