@@ -3,8 +3,8 @@ package edu.missouriwestern.csmp.gg.server.controllers;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import edu.missouriwestern.csmp.gg.base.Container;
+import edu.missouriwestern.csmp.gg.base.Entity;
 import edu.missouriwestern.csmp.gg.base.Game;
-import edu.missouriwestern.csmp.gg.server.networking.StompClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +25,10 @@ public class GameInfoController {
 
     private Gson gson;
 
-    @Autowired
     private Game game;
 
-    public GameInfoController() {
+    public GameInfoController(@Autowired Game game) {
+        this.game = game;
         var builder = new GsonBuilder();
         gson = builder.create();
     }
@@ -110,7 +110,7 @@ public class GameInfoController {
     @GetMapping("/container/player/{playerId}")
     @ResponseBody
     public String getPlayerContents(@PathVariable String playerId) {
-        var player = game.getPlayer(playerId);
+        var player = game.getAgent(playerId);
         var contents = new ArrayList<Integer>(); // contained entity ID's
         if(player != null) {// add all entity ID's to the list of ID's
             player.getEntities().forEach(ent ->  contents.add(ent.getID()));
@@ -122,9 +122,9 @@ public class GameInfoController {
     @GetMapping("/player-avatar/{playerId}")
     @ResponseBody
     public String getPlayerAvatar(@PathVariable String playerId) {
-        var player = game.getPlayer(playerId);
-        if(player != null && player instanceof StompClient) {
-            return ((StompClient)player).getAvatar().toString();
+        var player = game.getAgent(playerId);
+        if(player != null && player instanceof Entity) {
+            return ((Entity)player).toString();
         }
         return "ERROR";
     }

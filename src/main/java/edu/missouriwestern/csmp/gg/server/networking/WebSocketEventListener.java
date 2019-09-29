@@ -1,5 +1,6 @@
 package edu.missouriwestern.csmp.gg.server.networking;
 
+import edu.missouriwestern.csmp.gg.base.Agent;
 import edu.missouriwestern.csmp.gg.base.Game;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,8 +28,8 @@ public class WebSocketEventListener {
     @EventListener
     public void handleWebSocketConnectListener(SessionConnectedEvent event) {
         logger.info("player connected: " + event.getUser().getName());
-        StompClient stompClient = new StompClient(event.getUser().getName(), game);
-        game.addPlayer(stompClient);
+        Agent player = game.getAgent(event.getUser().getName(), "player");
+        game.addAgent(player);
     }
 
     @EventListener
@@ -38,12 +39,6 @@ public class WebSocketEventListener {
         String username = (String) headerAccessor.getSessionAttributes().get("username");
         if(username != null) {
             logger.info("User Disconnected : " + username);
-
-            //ChatMessage chatMessage = new ChatMessage();
-            //chatMessage.setType(ChatMessage.MessageType.LEAVE);
-            //chatMessage.setSender(username);
-
-            //messagingTemplate.convertAndSend("/topic/public", chatMessage);
         }
     }
 }

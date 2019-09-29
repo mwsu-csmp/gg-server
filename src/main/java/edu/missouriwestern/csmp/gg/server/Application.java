@@ -2,9 +2,9 @@
 package edu.missouriwestern.csmp.gg.server;
 
 import edu.missouriwestern.csmp.gg.base.Board;
+import edu.missouriwestern.csmp.gg.base.Event;
 import edu.missouriwestern.csmp.gg.base.EventListener;
 import edu.missouriwestern.csmp.gg.base.Game;
-import edu.missouriwestern.csmp.gg.base.events.GameStartEvent;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -13,11 +13,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 @SpringBootApplication()
 @ImportResource({
@@ -29,6 +25,7 @@ public class Application {
     private static Logger logger = Logger.getLogger(Application.class.getCanonicalName());
 
     public static void main(String[] args) {
+
         SpringApplication.run(Application.class, args);
     }
 
@@ -55,16 +52,7 @@ public class Application {
             var game = games.get(gameName);
             for (var listener : listeners.values())
                 game.registerListener(listener);
-            game.accept(new GameStartEvent(game));     // indicate game is starting
+            game.propagateEvent(new Event(game, "game-start"));     // indicate game is starting
         }
-    }
-
-    /** loads a text file resource as a string */
-    public static String loadMap(String mapFileName) throws IOException {
-        var mapString = new BufferedReader(new InputStreamReader(
-                Application.class.getClassLoader()
-                        .getResourceAsStream(mapFileName)))
-                .lines().collect(Collectors.joining("\n"));
-        return mapString;
     }
 }

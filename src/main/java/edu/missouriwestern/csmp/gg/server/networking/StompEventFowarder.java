@@ -3,26 +3,23 @@ package edu.missouriwestern.csmp.gg.server.networking;
 import edu.missouriwestern.csmp.gg.base.Event;
 import edu.missouriwestern.csmp.gg.base.EventListener;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.stereotype.Component;
-
-import java.util.logging.Logger;
-
 import org.springframework.beans.factory.annotation.Autowired;
 
-@Component("stomp-event-publisher")
-public class StompEventFowarder implements EventListener {
+import java.util.function.Consumer;
 
-    private static Logger logger = Logger.getLogger(StompEventFowarder.class.getCanonicalName());
+public class StompEventFowarder implements EventListener {
 
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
-
-
     @Override
-    public void accept(Event event) {
-
-        logger.info("Test parse: ");
+    public void acceptEvent(Event event) {
         messagingTemplate.convertAndSend("/topic/event", event.toString());
+    }
+
+    public Consumer<EventListener> registerEventReceiver() {
+        return listener -> {
+            // TODO: register listener to receive events from STOMP server
+        };
     }
 }
