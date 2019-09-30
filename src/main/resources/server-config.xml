@@ -7,7 +7,8 @@
 
     <bean id="data-store" class="edu.missouriwestern.csmp.gg.base.datastores.InMemoryDataStore" />
     <bean id="logger" class="edu.missouriwestern.csmp.gg.server.persistance.EventLogger"/>
-    <bean id="event-propagator" class="edu.missouriwestern.csmp.gg.server.networking.StompEventFowarder"/>
+    <bean id="stomp-forwarder" class="edu.missouriwestern.csmp.gg.server.networking.StompEventFowarder"/>
+    <bean id="event-propagator" class="edu.missouriwestern.csmp.gg.server.networking.FeedbackEventPropagator"/>
     <bean id="event-source" factory-bean="event-propagator" factory-method="registerEventReceiver"/>
 
 </beans>

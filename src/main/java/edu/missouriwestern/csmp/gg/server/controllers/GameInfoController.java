@@ -129,6 +129,17 @@ public class GameInfoController {
         return "ERROR";
     }
 
+    /** returns description of player's avatar entity */
+    @GetMapping("/entity-location/{entityId}")
+    @ResponseBody
+    public String getEntityLocation(@PathVariable Integer entityId) {
+        var location = game.getEntityLocation(game.getEntity(entityId));
+        if(location != null) {
+            return location.toString();
+        }
+        return "ERROR";
+    }
+
 
     @GetMapping("/game/client")
     public String loadClientGUI(Map<String, Object> model,

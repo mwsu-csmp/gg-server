@@ -24,6 +24,8 @@ public class Application {
 
     private static Logger logger = Logger.getLogger(Application.class.getCanonicalName());
 
+    private Game game;
+
     public static void main(String[] args) {
 
         SpringApplication.run(Application.class, args);
@@ -39,19 +41,25 @@ public class Application {
     @org.springframework.context.event.EventListener
     public void handleContextRefresh(ContextRefreshedEvent event) {
         var maps = event.getApplicationContext().getBeansOfType(Board.class);
+        var propagator = event.getApplicationContext().getBean("event-propagator");
         for(var mapName : maps.keySet()) {
             var map = maps.get(mapName);
             map.getGame().addBoard(mapName, map);
-            logger.info("loading map " + mapName + ": \n" + map);
+            logger.info("loading map " + mapName + ": \n");
+            logger.info(""+map.getGame().getBoard(mapName));
         }
 
         // register global listeners with all games
         var games = event.getApplicationContext().getBeansOfType(Game.class);
         var listeners = event.getApplicationContext().getBeansOfType(EventListener.class);
         for(var gameName : games.keySet()) {
-            var game = games.get(gameName);
-            for (var listener : listeners.values())
+            logger.info("Starting game " + gameName);
+            if(game != null) throw new RuntimeException("Only one game at a time currently supported");
+            this.game = games.get(gameName);
+            for (var listener : listeners.values()) {
+                if(listener == propagator) continue; // avoid creating feedback loop
                 game.registerListener(listener);
+            }
             game.propagateEvent(new Event(game, "game-start"));     // indicate game is starting
         }
     }
