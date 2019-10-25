@@ -44,7 +44,7 @@ public class Application {
         var propagator = event.getApplicationContext().getBean("event-propagator");
         for(var mapName : maps.keySet()) {
             var map = maps.get(mapName);
-            map.getGame().addBoard(mapName, map);
+            map.getGame().addBoard(map);
             logger.info("loading map " + mapName + ": \n");
             logger.info(""+map.getGame().getBoard(mapName));
         }
