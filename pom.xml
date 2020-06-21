@@ -121,11 +121,19 @@
             <artifactId>mwsu-assets</artifactId>
             <version>0.2-SNAPSHOT</version>
         </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
 
     <properties>
-        <java.version>12</java.version>
+        <java.version>11</java.version>
     </properties>
 
     <build>
