@@ -17,6 +17,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.stream.Collectors;
 
 @Controller
@@ -27,10 +29,22 @@ public class GameInfoController {
 
     private Game game;
 
+    private Timer timer;
+
     public GameInfoController(@Autowired Game game) {
         this.game = game;
         var builder = new GsonBuilder();
         gson = builder.create();
+        TimerTask t = new TimerTask() {
+            @Override
+            public void run() {
+                game.getEntities()
+                        .filter(e -> e instanceof Runnable)
+                        .forEach(re -> ((Runnable) re).run());
+            }
+        };
+        timer = new Timer();
+        timer.scheduleAtFixedRate(t, 1000, 1000);
     }
 
     /** displays a JSON description of a board */
