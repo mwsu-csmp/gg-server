@@ -106,12 +106,12 @@
         <dependency>
             <groupId>edu.missouriwestern.csmp.gg</groupId>
             <artifactId>mwsu</artifactId>
-            <version>0.2-SNAPSHOT</version>
+            <version>0.2</version>
         </dependency>
         <dependency>
             <groupId>edu.missouriwestern.csmp.gg</groupId>
             <artifactId>pixi-client</artifactId>
-            <version>0.2-SNAPSHOT</version>
+            <version>0.2</version>
         </dependency>
 
         <dependency>
