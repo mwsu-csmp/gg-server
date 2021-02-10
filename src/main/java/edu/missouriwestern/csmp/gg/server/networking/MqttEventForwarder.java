@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.logging.Logger;
 
-public class StompEventFowarder implements EventListener {
-    private static Logger logger = Logger.getLogger(StompEventFowarder.class.getCanonicalName());
+public class MqttEventForwarder implements EventListener {
+    private static Logger logger = Logger.getLogger(MqttEventForwarder.class.getCanonicalName());
 
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
@@ -16,7 +16,7 @@ public class StompEventFowarder implements EventListener {
     @Override
     public void acceptEvent(Event event) {
         logger.info("propagating: " + event);
-        messagingTemplate.convertAndSend("/topic/event", event.toString());
+        // TODO: propagate to appropriate channel in MQTT
     }
 
 }
