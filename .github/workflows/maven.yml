@@ -1,24 +1,27 @@
-# This workflow will build a Java project with Maven
-# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
-
-name: Java CI with Maven
+name: Maven_Install_Package_Deploy
 
 on:
   push:
     branches: [ master ]
-  pull_request:
-    branches: [ master ]
 
 jobs:
-  build:
-
+  Deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up JDK 1.8
+    - name: Set up JDK 11
       uses: actions/setup-java@v1
       with:
-        java-version: 1.8
-    - name: Build with Maven
-      run: mvn -B package --file pom.xml
+          java-version: 11
+    - uses: actions/checkout@v1
+    - name: Generate settings.xml for Maven Builds
+      uses: whelk-io/maven-settings-xml-action@v14
+      with:
+        repositories: '[{"id": "mwsu-csmp-gg-pixi-client", "url": "https://maven.pkg.github.com/mwsu-csmp/gg-pixi-client", "releases": { "enabled": "true" }, "snapshots": { "enabled": "false" } }, {"id": "mwsu-csmp-gg-server", "url": "https://maven.pkg.github.com/mwsu-csmp/gg-server", "releases": { "enabled": "true" }, "snapshots": { "enabled": "false" } }, {"id": "mwsu-csmp-gg-mwsu", "url": "https://maven.pkg.github.com/mwsu-csmp/gg-mwsu", "releases": { "enabled": "true" }, "snapshots": { "enabled": "false" } },{ "id": "mwsu-csmp-gg-game-api", "url": "https://maven.pkg.github.com/mwsu-csmp/gg-game-api", "releases": { "enabled": "true" }, "snapshots": { "enabled": "false" } }]'
+        servers: '[{ "id": "mwsu-csmp-gg-pixi-client", "username": "${{ secrets.ACTIONSUSERNAME }}", "password": "${{ secrets.ACTIONSTOKEN }}" }, { "id": "mwsu-csmp-gg-server", "username": "${{ secrets.ACTIONSUSERNAME }}", "password": "${{ secrets.ACTIONSTOKEN }}" }, { "id": "mwsu-csmp-gg-game-api", "username": "${{ secrets.ACTIONSUSERNAME }}", "password": "${{ secrets.ACTIONSTOKEN }}" },{ "id": "mwsu-csmp-gg-mwsu", "username": "${{ secrets.ACTIONSUSERNAME }}", "password": "${{ secrets.ACTIONSTOKEN }}" }]' 
+    - name: maven_intall 
+      run: mvn -X install       
+    - name: Maven Deploy
+      run: |
+        REPO="mwsu-csmp-gg-mwsu::default::https://maven.pkg.github.com/${GITHUB_REPOSITORY}"
+        mvn deploy -DaltReleaseDeploymentRepository="${REPO}" -DaltSnapshotDeploymentRepository="${REPO}"
