@@ -6,7 +6,7 @@
 
     <groupId>edu.missouriwestern.csmp.gg</groupId>
     <artifactId>server</artifactId>
-    <version>0.3</version>
+    <version>0.3-SNAPSHOT</version>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -106,6 +106,13 @@
             <version>2.0</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.eclipse.paho/org.eclipse.paho.client.mqttv3 -->
+        <dependency>
+            <groupId>org.eclipse.paho</groupId>
+            <artifactId>org.eclipse.paho.client.mqttv3</artifactId>
+            <version>1.2.5</version>
+        </dependency>
+
         <!-- https://mvnrepository.com/artifact/org.springframework.integration/spring-integration-mqtt -->
         <dependency>
             <groupId>org.springframework.integration</groupId>
@@ -117,7 +124,7 @@
         <dependency>
             <groupId>edu.missouriwestern.csmp.gg</groupId>
             <artifactId>mwsu</artifactId>
-            <version>0.2</version>
+            <version>0.3-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>edu.missouriwestern.csmp.gg</groupId>
@@ -127,7 +134,7 @@
         <dependency>
             <groupId>edu.missouriwestern.csmp.gg</groupId>
             <artifactId>2dapi</artifactId>
-            <version>0.3</version>
+            <version>0.4-SNAPSHOT</version>
         </dependency>     
     </dependencies>
 

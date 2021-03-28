@@ -5,12 +5,17 @@ import edu.missouriwestern.csmp.gg.base.Board;
 import edu.missouriwestern.csmp.gg.base.Event;
 import edu.missouriwestern.csmp.gg.base.EventListener;
 import edu.missouriwestern.csmp.gg.base.Game;
+import edu.missouriwestern.csmp.gg.server.networking.MqttEventPropagator;
+import org.eclipse.paho.client.mqttv3.IMqttClient;
+import org.eclipse.paho.client.mqttv3.MqttException;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.task.TaskExecutor;
+import org.springframework.integration.mqtt.core.MqttPahoClientFactory;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.logging.Logger;
@@ -20,11 +25,17 @@ import java.util.logging.Logger;
         "classpath:game-layout.xml",
         "classpath:server-config.xml"
 })
+@ConfigurationProperties(prefix = "gg")
 public class Application {
 
-    private static Logger logger = Logger.getLogger(Application.class.getCanonicalName());
+    public static Logger logger = Logger.getLogger(Application.class.getCanonicalName());
 
     private Game game;
+
+    private String mqttUri="tcp://localhost";  // TODO: draw from properties file
+    private String mqttClientId="server";
+
+    private IMqttClient mqttClient;
 
     public static void main(String[] args) {
 
@@ -39,9 +50,17 @@ public class Application {
 
     /** loads boards at start of server */
     @org.springframework.context.event.EventListener
-    public void handleContextRefresh(ContextRefreshedEvent event) {
+    public void handleContextRefresh(ContextRefreshedEvent event) throws MqttException {
+
+        // connect to MQTT server
+        var mqttFactory = (MqttPahoClientFactory)event.getApplicationContext().getBean("mqtt-connection-factory");
+        mqttClient = mqttFactory.getClientInstance(mqttUri, mqttClientId);
+        mqttClient.connect();
+        if(!mqttClient.isConnected()) throw new RuntimeException("could not connect to mqtt broker");
+        logger.info("Successfully connected to MQTT Broker");
+
         var maps = event.getApplicationContext().getBeansOfType(Board.class);
-        var propagator = event.getApplicationContext().getBean("event-propagator");
+        var propagator = (MqttEventPropagator)event.getApplicationContext().getBean("event-propagator");
         for(var mapName : maps.keySet()) {
             var map = maps.get(mapName);
             map.getGame().addBoard(map);
@@ -56,6 +75,7 @@ public class Application {
             logger.info("Starting game " + gameName);
             if(game != null) throw new RuntimeException("Only one game at a time currently supported");
             this.game = games.get(gameName);
+            propagator.setMqttClient(mqttClient, game);
             for (var listener : listeners.values()) {
                 if(listener == propagator) continue; // avoid creating feedback loop
                 game.registerListener(listener);
