@@ -5,6 +5,7 @@ import edu.missouriwestern.csmp.gg.base.Board;
 import edu.missouriwestern.csmp.gg.base.Event;
 import edu.missouriwestern.csmp.gg.base.EventListener;
 import edu.missouriwestern.csmp.gg.base.Game;
+import edu.missouriwestern.csmp.gg.server.controllers.PlayerController;
 import edu.missouriwestern.csmp.gg.server.networking.MqttEventPropagator;
 import org.eclipse.paho.client.mqttv3.IMqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
@@ -61,6 +62,7 @@ public class Application {
 
         var maps = event.getApplicationContext().getBeansOfType(Board.class);
         var propagator = (MqttEventPropagator)event.getApplicationContext().getBean("event-propagator");
+        var playerController = (PlayerController)event.getApplicationContext().getBean(PlayerController.class);
         for(var mapName : maps.keySet()) {
             var map = maps.get(mapName);
             map.getGame().addBoard(map);
@@ -76,6 +78,7 @@ public class Application {
             if(game != null) throw new RuntimeException("Only one game at a time currently supported");
             this.game = games.get(gameName);
             propagator.setMqttClient(mqttClient, game);
+            playerController.setMqttClient(mqttClient, game);
             for (var listener : listeners.values()) {
                 if(listener == propagator) continue; // avoid creating feedback loop
                 game.registerListener(listener);

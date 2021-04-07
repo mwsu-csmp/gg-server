@@ -1,10 +1,8 @@
 package edu.missouriwestern.csmp.gg.server.networking;
 
-import com.google.gson.Gson;
 import edu.missouriwestern.csmp.gg.base.Event;
 import edu.missouriwestern.csmp.gg.base.EventListener;
 import edu.missouriwestern.csmp.gg.base.Game;
-import edu.missouriwestern.csmp.gg.base.HasProperties;
 import edu.missouriwestern.csmp.gg.server.Application;
 import org.eclipse.paho.client.mqttv3.*;
 import java.nio.charset.StandardCharsets;

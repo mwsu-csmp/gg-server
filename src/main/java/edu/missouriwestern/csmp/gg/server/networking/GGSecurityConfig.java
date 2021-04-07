@@ -1,5 +1,6 @@
 package edu.missouriwestern.csmp.gg.server.networking;
 
+import edu.missouriwestern.csmp.gg.server.controllers.PlayerController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -14,6 +15,9 @@ public class GGSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     PasswordEncoder passwordEncoder;
+
+    @Autowired
+    PlayerController playerController;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -40,6 +44,7 @@ public class GGSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/container/**").hasRole("USER")
                 //.antMatchers("/index.html").hasAnyRole("ADMIN", "USER")
                 .and().formLogin()
+                .successHandler(playerController)
                 .and().logout().logoutSuccessUrl("/index.html").permitAll()
                 .and().csrf().disable();
     }
