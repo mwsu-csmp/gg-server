@@ -30,6 +30,7 @@ public class MqttEventPropagator implements EventListener, MqttCallback {
                 client.publish(e.getGame().getId(), new MqttMessage(e.toString().getBytes(StandardCharsets.UTF_8)));
             }
         } catch (MqttException mqttException) {
+            Application.logger.info("error propogating event: " + mqttException);
             mqttException.printStackTrace();
         }
     }
@@ -45,12 +46,16 @@ public class MqttEventPropagator implements EventListener, MqttCallback {
         Application.logger.info("disconnected from mqtt");
     }
 
+    public void forwardEvent(Event e) {
+        for (var listener : listeners)
+            listener.acceptEvent(e);
+    }
+
     @Override
     public void messageArrived(String s, MqttMessage mqttMessage) throws Exception {
         try {
             var e = Event.fromJson(game, mqttMessage.toString());
-            for (var listener : listeners)
-                listener.acceptEvent(e);
+            forwardEvent(e);
         } catch(Exception e) {
             Application.logger.info(e.toString());
             Application.logger.info(Arrays.toString(e.getStackTrace()));

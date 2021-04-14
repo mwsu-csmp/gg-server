@@ -30,6 +30,7 @@ public class PlayerController implements MqttCallback, AuthenticationSuccessHand
     private Gson gson;
 
     @Autowired private Game game;
+    @Autowired private MqttEventPropagator propagator;
 
     private IMqttClient client;
 
@@ -96,7 +97,9 @@ public class PlayerController implements MqttCallback, AuthenticationSuccessHand
             properties.put(property, decodeJSONObject(element.get(property)));
         }
         var event = new Event(game, "command", properties);
-        game.getAgent(agent).acceptEvent(event);
+        Application.logger.info("INCOMMING COMMAND: " + event.toString());
+        // TODO: validate command
+        propagator.forwardEvent(event);
     }
 
     @Override
